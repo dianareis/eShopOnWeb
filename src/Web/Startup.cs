@@ -30,20 +30,24 @@ namespace Microsoft.eShopWeb.Web
     public class Startup
     {
         private IServiceCollection _services;
-        public Startup(IConfiguration configuration)
+
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            // use in-memory database
-            ConfigureInMemoryDatabases(services);
+                // use in-memory database
+                ConfigureInMemoryDatabases(services);
 
-            // use real database
-            //ConfigureProductionServices(services);
+                // use real database
+                //ConfigureProductionServices(services);
         }
 
         private void ConfigureInMemoryDatabases(IServiceCollection services)
@@ -74,6 +78,11 @@ namespace Microsoft.eShopWeb.Web
             ConfigureServices(services);
         }
 
+        public void ConfigureAzureServices(IServiceCollection services)
+        {
+            ConfigureProductionServices(services);
+        }
+
         public void ConfigureTestingServices(IServiceCollection services)
         {
             ConfigureInMemoryDatabases(services);
@@ -83,6 +92,7 @@ namespace Microsoft.eShopWeb.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             ConfigureCookieSettings(services);
 
             CreateIdentityIfNotCreated(services);
