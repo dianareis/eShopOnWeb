@@ -2,13 +2,17 @@
 
 <form asp-page="/Basket/Index" method="post">
     <img class="esh-catalog-thumbnail" src="@Model.PictureUri" />
-    <input class="esh-catalog-button" type="submit" value="[ ADD TO BASKET ]" />
+
+    @if(Model.ShowPrice) {
+        <input class="esh-catalog-button" type="submit" value="[ ADD TO BASKET ]" />
+    }
+    
     <div class="esh-catalog-name">
         <span>@Model.Name</span>
     </div>
-        <div class="esh-catalog-price">
-            <span> @(Model.ShowPrice ? Model.Price.ToString("N2") : "sob Consulta")</span>
-        </div>
+    <div class="esh-catalog-price">
+        <span> @(Model.ShowPrice ? Model.Price.ToString("N2") : "Sob-Consulta")</span>
+    </div>
 
     <input type="hidden" asp-for="@Model.Id" name="id" />
     <input type="hidden" asp-for="@Model.Name" name="name" />
