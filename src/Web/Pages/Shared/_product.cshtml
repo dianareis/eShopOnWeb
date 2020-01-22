@@ -11,7 +11,12 @@
         <span>@Model.Name</span>
     </div>
     <div class="esh-catalog-price">
-        <span> @(Model.ShowPrice ? Model.Price.ToString("N2") : "Sob-Consulta")</span>
+        @if(Model.ShowPrice){
+            <span class="item-price">@Model.Price.ToString("N2")</span>
+            <span class="item-price-unit">@Model.PriceUnit.ToString()</span>
+        } else {
+            <span>Sob-Consulta</span>
+        }
     </div>
 
     <input type="hidden" asp-for="@Model.Id" name="id" />

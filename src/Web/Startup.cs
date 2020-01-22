@@ -1,4 +1,5 @@
 ﻿using Ardalis.ListStartupServices;
+using Infrastructure.Services.CurrencyServices;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -98,6 +99,12 @@ namespace Microsoft.eShopWeb.Web
             CreateIdentityIfNotCreated(services);
 
             services.AddMediatR(typeof(BasketViewModelService).Assembly);
+
+            if(_webHostEnvironment.EnvironmentName=="Azure" || _webHostEnvironment.IsDevelopment()) {
+                services.AddSingleton<ICurrencyService, CurrencyServiceStatic>();
+            } else {
+                services.AddSingleton<ICurrencyService, CurrencyServiceExternal>();
+            }
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
             services.AddScoped<ICatalogViewModelService, CachedCatalogViewModelService>();
