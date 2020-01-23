@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using Web.Extensions.Middleware;
 
 namespace Microsoft.eShopWeb.Web
 {
@@ -198,6 +199,7 @@ namespace Microsoft.eShopWeb.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseBenchmarking();
             app.UseHealthChecks("/health",
                 new HealthCheckOptions
                 {
