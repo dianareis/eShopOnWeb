@@ -75,12 +75,12 @@ namespace Microsoft.eShopWeb.Web.Services
             }
 
             var CatalogItemsTask = Task.WhenAll(itemsOnPage.Select(catalogItem => CreateCatalogItemViewModel(catalogItem, cancellationToken)));
-
+            cancellationToken.ThrowIfCancellationRequested();
             var vm = new CatalogIndexViewModel()
             {
                 CatalogItems = await CatalogItemsTask,
-                Brands = await GetBrands(),
-                Types = await GetTypes(),
+                Brands = await GetBrands(cancellationToken),
+                Types = await GetTypes(cancellationToken),
                 BrandFilterApplied = brandId ?? 0,
                 TypesFilterApplied = typeId ?? 0,
                 PaginationInfo = new PaginationInfoViewModel()
