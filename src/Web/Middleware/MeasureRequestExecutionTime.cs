@@ -11,32 +11,40 @@ namespace Web.Middleware
         private readonly ILogger<MeasureRequestExecutionTime> _logger;
 
         public MeasureRequestExecutionTime(RequestDelegate next, ILogger<MeasureRequestExecutionTime> logger
-        ) {
-            _logger = logger;
-            _next = next;
+        )
+        {
+            _next = next ?? throw new ArgumentNullException(nameof(next));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task InvokeAsync(HttpContext httpContext) {
-            if(await ShouldMeasureRequests(httpContext)) {
+        public async Task InvokeAsync(HttpContext httpContext)
+        {
+            if (await ShouldMeasureRequests(httpContext))
+            {
                 var requestStartDate = DateTimeOffset.Now;
-            _logger.LogInformation($"Request started at {requestStartDate}");
-            await _next(httpContext);
+                httpContext.Items["RequestStart"] = requestStartDate;
+                _logger.LogInformation($"Request started at {requestStartDate}");
+                // TODO: Should use httpContext.Response.OnStarting to be more precise about when the response was started
+                await _next(httpContext);
 
-            var requestEndDate = DateTimeOffset.Now;
-            var durationMs = (requestEndDate - requestStartDate).TotalMilliseconds;
-            _logger.LogInformation($"Request ended at {requestEndDate} took {durationMs}ms");
-            } else {
+                var requestEndDate = DateTimeOffset.Now;
+                var durationMs = (requestEndDate - requestStartDate).TotalMilliseconds;
+                _logger.LogInformation($"Request ended at {requestEndDate} took {durationMs}ms");
+            }
+            else
+            {
                 await _next(httpContext);
             }
-            
+
 
         }
 
         private Task<bool> ShouldMeasureRequests(HttpContext httpContext)
         {
-            return Task.FromResult(httpContext.Request.Path.StartsWithSegments(new PathString("/api"))
-                || httpContext.Request.ContentType == "image/png"
-            );
+            // TODO: Check relevant conditions to assess
+            // Request path (eg. httpContext.Request.Path.StartsWithSegments(new PathString("/api"))
+            // Request content-type (eg. httpContext.Request.ContentType == "image/png")
+            return Task.FromResult(true);
         }
     }
 }

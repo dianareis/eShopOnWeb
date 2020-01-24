@@ -234,7 +234,12 @@ namespace Microsoft.eShopWeb.Web
 
             app.UseStaticFiles();
             app.UseRouting();
-            
+
+            app.Map("/api", appBuilder =>
+            {
+                appBuilder.UseBenchmarking();
+            });
+
             app.UseHttpsRedirection();
             app.UseCookiePolicy();
             app.UseAuthentication();
