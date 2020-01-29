@@ -11,6 +11,10 @@
 <section class="esh-catalog-filters">
     <div class="container">
         <form method="get">
+            <label class="esh-catalog-label" data-title="View Type">
+                <select asp-for="@Model.CatalogModel.ResultView"
+                asp-items="@Model.CatalogModel.ResultViews" class="esh-catalog-filter"></select>
+            </label>
             <label class="esh-catalog-label" data-title="brand">
                 <select asp-for="@Model.CatalogModel.BrandFilterApplied" asp-items="@Model.CatalogModel.Brands" class="esh-catalog-filter"></select>
             </label>
@@ -21,25 +25,46 @@
         </form>
     </div>
 </section>
+
 <div class="container">
+
+    @* Func<dynamic, object> listItemTemplate = item => Html.Partial("_product", item); *@
+
     @if (Model.CatalogModel.CatalogItems.Any())
     {
-        <partial name="_pagination" for="CatalogModel.PaginationInfo" />
+        @await Html.PartialAsync("_pagination", Model.CatalogModel.PaginationInfo);
 
-        <div class="esh-catalog-items row">
-            @foreach (var catalogItem in Model.CatalogModel.CatalogItems)
-            {
-                <div class="esh-catalog-item col-md-4">
-                    <partial name="_product" for="@catalogItem" />
-                </div>
+        @* <form method="get">
+            <text>Vista: </text>
+            <input type="submit" class="btn btn-primary" name="vista" value="Grelha" />
+            <input type="submit" class="btn btn-primary" name="vista" value="Lista" />
+            <input type="submit" class="btn btn-primary" name="vista" value="Tabela" />
+        </form> *@
+
+        switch (Model.CatalogModel.ResultView) {
+            case ResultView.Grid:    
+                <partial name="ResultViews/_gridView" for="@Model.CatalogModel.CatalogItems" />        
+                break;
+            case ResultView.List: {
+                Func<dynamic, object> listItemTemplate = @<partial name="_product_mini" for="@item" />;
+
+                var listViewModel = new ListViewModel {
+                    Items = Model.CatalogModel.CatalogItems,
+                    ItemTemplate = listItemTemplate
+                };
+                <partial name="ResultViews/_listView" for="@listViewModel" />
+                break;
             }
-        </div>
-        <partial name="_pagination" for="CatalogModel.PaginationInfo" />
-    }
-    else
+            case ResultView.Table:
+                <partial name="ResultViews/_tableView" for="CatalogModel.CatalogItems" />
+                break;
+            }
+            @await Html.PartialAsync("_pagination", Model.CatalogModel.PaginationInfo);
+    } else
     {
         <div class="esh-catalog-items row">
             THERE ARE NO RESULTS THAT MATCH YOUR SEARCH
         </div>
     }
+
 </div>
