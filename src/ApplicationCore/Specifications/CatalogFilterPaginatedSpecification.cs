@@ -7,7 +7,7 @@ namespace Microsoft.eShopWeb.ApplicationCore.Specifications
         public CatalogFilterPaginatedSpecification(int skip, int take, string searchText, int? brandId, int? typeId)
             : base(i => (!brandId.HasValue || i.CatalogBrandId == brandId) &&
                 (!typeId.HasValue || i.CatalogTypeId == typeId) &&
-                (string.IsNullOrEmpty(searchText) || i.Name.ToLowerInvariant().Contains(searchText)))
+                (string.IsNullOrEmpty(searchText) || i.Name.ToLowerInvariant().Contains(searchText.ToLowerInvariant())))
         {
             ApplyPaging(skip, take);
         }
