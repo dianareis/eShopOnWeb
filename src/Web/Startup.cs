@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
@@ -27,6 +28,7 @@ using System.Linq;
 using System.Net.Mime;
 using Web.Extensions.Middleware;
 
+[assembly : ApiConventionType(typeof(DefaultApiConventions))]
 namespace Microsoft.eShopWeb.Web
 {
     public class Startup
