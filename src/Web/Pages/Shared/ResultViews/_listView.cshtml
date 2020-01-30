@@ -2,21 +2,23 @@
 
 @if(Model.Unordered) {
     <div class="esh-catalog-items">
-            <ul>
-                @foreach (var item in Model.Items)
-                { 
-                    <li class="@Model.ListItemClass">@Model.ItemTemplate(item)</li>
-                }
-            </ul>
+        <ul class="@Model.ListClass">
+            @foreach (var item in Model.Items)
+            { 
+                <li class="@Model.ListItemClass">@Model.ItemTemplate(item)</li>
+            }
+        </ul>
     </div>
 } else
 {
-    <ol class="@Model.ListClass">
-    @foreach (var item in Model.Items)
-    {
-        <li class="@Model.ListItemClass">
-            @Model.ItemTemplate(item)
-        </li>
-    }
-    </ol>
+    <div class="esh-catalog-items">
+        <ol class="@Model.ListClass">
+        @foreach (var item in Model.Items)
+        {
+            <li class="@Model.ListItemClass">
+                @Model.ItemTemplate(item)
+            </li>
+        }
+        </ol>
+    </div>
 }

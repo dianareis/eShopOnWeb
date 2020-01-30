@@ -7,9 +7,14 @@ namespace Web.Middleware
 {
     public class MeasureRequestExecutionTime
     {
-        private readonly RequestDelegate _next;
         private readonly ILogger<MeasureRequestExecutionTime> _logger;
+        private readonly RequestDelegate _next;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="next">Next middleware delegate</param>
+        /// <param name="logger">Logger</param>
         public MeasureRequestExecutionTime(RequestDelegate next, ILogger<MeasureRequestExecutionTime> logger
         )
         {
@@ -19,6 +24,7 @@ namespace Web.Middleware
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
+            // Requests
             if (await ShouldMeasureRequests(httpContext))
             {
                 var requestStartDate = DateTimeOffset.Now;
@@ -30,18 +36,17 @@ namespace Web.Middleware
                 var requestEndDate = DateTimeOffset.Now;
                 var durationMs = (requestEndDate - requestStartDate).TotalMilliseconds;
                 _logger.LogInformation($"Request ended at {requestEndDate} took {durationMs}ms");
+                // After subsequent, most likely after a response
             }
             else
             {
                 await _next(httpContext);
             }
-
-
         }
 
         private Task<bool> ShouldMeasureRequests(HttpContext httpContext)
         {
-            // TODO: Check relevant conditions to assess
+            // TODO: Check relevant conditions to access
             // Request path (eg. httpContext.Request.Path.StartsWithSegments(new PathString("/api"))
             // Request content-type (eg. httpContext.Request.ContentType == "image/png")
             return Task.FromResult(true);

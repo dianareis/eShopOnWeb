@@ -7,10 +7,15 @@ using Microsoft.eShopWeb.Web.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Web.Extensions
+namespace Microsoft.eShopWeb.Web.Services
 {
     public static class CatalogExtensions
     {
+        /// <summary>
+        /// Add Catalog Services
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
         public static void AddCatalogServices(this IServiceCollection services, IConfiguration configuration) {
             services.AddScoped<ICatalogViewModelService, CachedCatalogViewModelService>();
             services.AddScoped<IBasketService, BasketService>();

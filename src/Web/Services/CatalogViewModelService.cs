@@ -30,8 +30,8 @@ namespace Microsoft.eShopWeb.Web.Services
         private readonly ICurrencyService _currencyService;
         private readonly CatalogContext _catalogContext;
 
-        private const Currency DEFAULT_PRICE_UNIT = Currency.USD;
-        private const Currency USER_PRICE_UNIT = Currency.EUR;
+        private const Currency DEFAULT_PRICE_UNIT = Currency.USD; // TODO: Get from Configuration
+        private const Currency USER_PRICE_UNIT = Currency.EUR; // TODO: Get from IUserCurrencyService 
 
         public CatalogViewModelService(
             ILoggerFactory loggerFactory,
@@ -51,14 +51,20 @@ namespace Microsoft.eShopWeb.Web.Services
             _catalogContext = catalogContext;
         }
 
-        private async Task<CatalogItemViewModel> CreateCatalogItemViewModel(CatalogItem catalogItem, CancellationToken cancellationToken = default(CancellationToken))
+        /// <summary>
+        /// Create a catalog item view model from a catalog item data model
+        /// </summary>
+        /// <param name="catalogItem">Catalog item</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <returns>CatalogItemViewModel</returns>
+        private async Task<CatalogItemViewModel> CreateCatalogItemViewModel(CatalogItem catalogItem, bool convertPrice = true, CancellationToken cancellationToken = default(CancellationToken))
         {
             return new CatalogItemViewModel()
             {
                 Id = catalogItem.Id,
                 Name = catalogItem.Name,
                 PictureUri = catalogItem.PictureUri,
-                Price = await _currencyService.Convert(catalogItem.Price, DEFAULT_PRICE_UNIT, USER_PRICE_UNIT, cancellationToken),
+                Price = await (convertPrice ? _currencyService.Convert(catalogItem.Price, DEFAULT_PRICE_UNIT, USER_PRICE_UNIT, cancellationToken) : Task.FromResult(catalogItem.Price)),
                 ShowPrice = catalogItem.ShowPrice,
                 PriceUnit = USER_PRICE_UNIT
             };
@@ -69,10 +75,10 @@ namespace Microsoft.eShopWeb.Web.Services
         {
             var query = _catalogContext.CatalogItems as IQueryable<CatalogItem>;
             var whereExp = new List<Expression<Func<CatalogItem, bool>>>();
-            if (brandId.HasValue & typeId.HasValue)
+            if (brandId.HasValue && typeId.HasValue)
             {
-                // query = query.Where(x => x.CatalogBrandId == brandId.Value & x.CatalogTypeId == typeId.Value);
-                whereExp.Add(x => x.CatalogBrandId == brandId.Value & x.CatalogTypeId == typeId);
+                // query = query.Where(x => x.CatalogBrandId == brandId.Value && x.CatalogTypeId == typeId.Value);
+                whereExp.Add(x => x.CatalogBrandId == brandId.Value && x.CatalogTypeId == typeId);
             }
             else if (brandId.HasValue)
             {
@@ -92,36 +98,25 @@ namespace Microsoft.eShopWeb.Web.Services
         private Task<int> CountCatalogItems(int? brandId, int? typeId)
         {
             var query = _catalogContext.CatalogItems as IQueryable<CatalogItem>;
-            if (brandId.HasValue & typeId.HasValue)
-            {
-                query = query.Where(x => x.CatalogBrandId == brandId.Value & x.CatalogTypeId == typeId.Value);
-
-            } else if (brandId.HasValue)
-            {
-                query = query.Where(x => x.CatalogBrandId == brandId.Value);
-
-            } else if (typeId.HasValue)
-            {
-                query = query.Where(x => x.CatalogTypeId == typeId.Value);
-
-            }
+            query.Where(catalogItem => (!brandId.HasValue || catalogItem.CatalogBrandId == brandId) && (!typeId.HasValue || catalogItem.CatalogTypeId == typeId));
 
             return query.CountAsync();
 
         }
 
-        public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, string searchText, int? brandId, int? typeId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, string searchText, int? brandId, int? typeId, bool convertPrice = true, CancellationToken cancellationToken = default(CancellationToken))
         {
             _logger.LogInformation("GetCatalogItems called.");
 
+            var pageItemsOffset = itemsPage * pageIndex;
             var filterSpecification = new CatalogFilterSpecification(searchText, brandId, typeId);
-            var filterPaginatedSpecification = new CatalogFilterPaginatedSpecification(itemsPage * pageIndex, itemsPage, searchText, brandId, typeId);
+            var filterPaginatedSpecification = new CatalogFilterPaginatedSpecification(pageItemsOffset, itemsPage, searchText, brandId, typeId);
 
             // the implementation below using ForEach and Count. We need a List.
             var itemsOnPage = await _itemRepository.ListAsync(filterPaginatedSpecification);
             var totalItems = await _itemRepository.CountAsync(filterSpecification);
 
-            // var itemsOnPage = await ListCatalogItem(itemsPage * pageIndex, itemsPage, brandId, typeId);
+            // var itemsOnPage = await ListCatalogItem(pageItemsOffset, itemsPage, brandId, typeId);
             // var totalItems = await CountCatalogItems(brandId, typeId);
 
             foreach (var itemOnPage in itemsOnPage)
@@ -129,7 +124,7 @@ namespace Microsoft.eShopWeb.Web.Services
                 itemOnPage.PictureUri = _uriComposer.ComposePicUri(itemOnPage.PictureUri);
             }
 
-            var CatalogItemsTask = Task.WhenAll(itemsOnPage.Select(catalogItem => CreateCatalogItemViewModel(catalogItem, cancellationToken)));
+            var CatalogItemsTask = Task.WhenAll(itemsOnPage.Select(catalogItem => CreateCatalogItemViewModel(catalogItem, convertPrice, cancellationToken)));
             cancellationToken.ThrowIfCancellationRequested();
             var vm = new CatalogIndexViewModel()
             {
@@ -188,7 +183,7 @@ namespace Microsoft.eShopWeb.Web.Services
             return items;
         }
 
-        public async Task<CatalogItemViewModel> GetItemById(int id, CancellationToken cancellationToken = default)
+        public async Task<CatalogItemViewModel> GetItemById(int id, bool convertPrice = true, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -197,7 +192,7 @@ namespace Microsoft.eShopWeb.Web.Services
                 {
                     throw new ModelNotFoundException($"Catalog item not found. id={id}");
                 }
-                var catalogItemViewModel = await CreateCatalogItemViewModel(item, cancellationToken);
+                var catalogItemViewModel = await CreateCatalogItemViewModel(item, convertPrice, cancellationToken);
                 return catalogItemViewModel;
             }
             catch (Exception ex)

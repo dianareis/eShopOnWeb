@@ -12,17 +12,17 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
         public CatalogController(ICatalogViewModelService catalogViewModelService) => _catalogViewModelService = catalogViewModelService;
 
         [HttpGet]
-        public async Task<ActionResult<CatalogIndexViewModel>> List(int? brandFilterApplied, int? typesFilterApplied, int? page, string searchText)
+        public async Task<ActionResult<CatalogIndexViewModel>> List(int? brandFilterApplied, int? typesFilterApplied, int? page, string searchText = null)
         {
             var itemsPage = 10;
-            var catalogModel = await _catalogViewModelService.GetCatalogItems(page ?? 0, itemsPage, searchText, brandFilterApplied, typesFilterApplied, HttpContext.RequestAborted);
+            var catalogModel = await _catalogViewModelService.GetCatalogItems(page ?? 0, itemsPage, searchText, brandFilterApplied, typesFilterApplied, true, HttpContext.RequestAborted);
             return Ok(catalogModel);
         }
         
 
         [HttpGet("{id}")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
-        public async Task<ActionResult<CatalogIndexViewModel>> GetById(int id)
+        public async Task<ActionResult<CatalogItemViewModel>> GetById(int id)
         {
             try
             {

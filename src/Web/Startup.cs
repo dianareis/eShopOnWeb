@@ -47,12 +47,14 @@ namespace Microsoft.eShopWeb.Web
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-                // use in-memory database
-                ConfigureInMemoryDatabases(services);
+            services.AddSingleton<ICurrencyService, CurrencyServiceStatic>();
 
-                // use real database
-                //ConfigureProductionServices(services);
-        }
+            // use in-memory database
+            ConfigureInMemoryDatabases(services);
+
+            // use real database
+            //ConfigureProductionServices(services);
+    }
 
         private void ConfigureInMemoryDatabases(IServiceCollection services)
         {
@@ -69,11 +71,14 @@ namespace Microsoft.eShopWeb.Web
 
         public void ConfigureProductionServices(IServiceCollection services)
         {
+            services.AddSingleton<ICurrencyService, CurrencyServiceExternal>();
+
+            // use real database
             // use real database
             // Requires LocalDB which can be installed with SQL Server Express 2016
             // https://www.microsoft.com/en-us/download/details.aspx?id=54284
             services.AddDbContext<CatalogContext>(c =>
-                c.UseSqlServer(Configuration.GetConnectionString("CatalogConnection")));
+                c.UseSqlServer(Configuration.GetConnectionString("CatalogConnection"))); // c: dbContextOptionsBuilder
 
             // Add Identity DbContext
             services.AddDbContext<AppIdentityDbContext>(options =>
@@ -92,74 +97,6 @@ namespace Microsoft.eShopWeb.Web
             ConfigureInMemoryDatabases(services);
         }
 
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-
-            ConfigureCookieSettings(services);
-
-            CreateIdentityIfNotCreated(services);
-
-            services.AddMediatR(typeof(BasketViewModelService).Assembly);
-
-            if(_webHostEnvironment.EnvironmentName=="Azure" || _webHostEnvironment.IsDevelopment()) {
-                services.AddSingleton<ICurrencyService, CurrencyServiceStatic>();
-            } else {
-                services.AddSingleton<ICurrencyService, CurrencyServiceExternal>();
-            }
-
-            services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
-            services.AddScoped<ICatalogViewModelService, CachedCatalogViewModelService>();
-            services.AddScoped<IBasketService, BasketService>();
-            services.AddScoped<IBasketViewModelService, BasketViewModelService>();
-            services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<CatalogViewModelService>();
-            services.AddScoped<ICatalogItemViewModelService, CatalogItemViewModelService>();
-            services.Configure<CatalogSettings>(Configuration);
-            services.AddSingleton<IUriComposer>(new UriComposer(Configuration.Get<CatalogSettings>()));
-            services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
-            services.AddTransient<IEmailSender, EmailSender>();
-
-            // Add memory cache services
-            services.AddMemoryCache();
-
-            services.AddRouting(options =>
-            {
-                // Replace the type and the name used to refer to it with your own
-                // IOutboundParameterTransformer implementation
-                options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
-            });
-
-            services.AddMvc(options =>
-            {
-                options.Conventions.Add(new RouteTokenTransformerConvention(
-                         new SlugifyParameterTransformer()));
-
-            });    
-            services.AddRazorPages(options =>
-            {
-                options.Conventions.AuthorizePage("/Basket/Checkout");
-            });
-            services.AddControllersWithViews();
-
-            services.AddHttpContextAccessor();
-            
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1"}));
-
-            services.AddHealthChecks();
-
-            services.Configure<ServiceConfig>(config =>
-            {
-                config.Services = new List<ServiceDescriptor>(services);
-
-                config.Path = "/allservices";
-            });
-
-            _services = services; // used to debug registered services
-        }
-
         private static void CreateIdentityIfNotCreated(IServiceCollection services)
         {
             var sp = services.BuildServiceProvider();
@@ -172,7 +109,7 @@ namespace Microsoft.eShopWeb.Web
                     services.AddIdentity<ApplicationUser, IdentityRole>()
                         .AddDefaultUI()
                         .AddEntityFrameworkStores<AppIdentityDbContext>()
-                                        .AddDefaultTokenProviders();
+                        .AddDefaultTokenProviders();
                 }
             }
         }
@@ -196,6 +133,73 @@ namespace Microsoft.eShopWeb.Web
                     IsEssential = true // required for auth to work without explicit user consent; adjust to suit your privacy policy
                 };
             });
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+
+            ConfigureCookieSettings(services);
+
+            CreateIdentityIfNotCreated(services);
+
+            services.AddMediatR(typeof(BasketViewModelService).Assembly);
+
+            if(_webHostEnvironment.EnvironmentName=="Azure" || _webHostEnvironment.IsDevelopment()) {
+                services.AddSingleton<ICurrencyService, CurrencyServiceStatic>();
+            } else {
+                services.AddSingleton<ICurrencyService, CurrencyServiceExternal>();
+            }
+
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            services.AddCatalogServices(Configuration);
+            // services.AddScoped<ICatalogViewModelService, CachedCatalogViewModelService>();
+            // services.AddScoped<IBasketService, BasketService>();
+            // services.AddScoped<IBasketViewModelService, BasketViewModelService>();
+            // services.AddScoped<IOrderService, OrderService>();
+            // services.AddScoped<IOrderRepository, OrderRepository>();
+            // services.AddScoped<CatalogViewModelService>();
+            // services.AddScoped<ICatalogItemViewModelService, CatalogItemViewModelService>();
+            // services.Configure<CatalogSettings>(Configuration);
+            // services.AddSingleton<IUriComposer>(new UriComposer(Configuration.Get<CatalogSettings>()));
+            services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+            services.AddTransient<IEmailSender, EmailSender>();
+
+            // Add memory cache services
+            services.AddMemoryCache();
+
+            services.AddRouting(options =>
+            {
+                // Replace the type and the name used to refer to it with your own
+                // IOutboundParameterTransformer implementation
+                options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
+            });
+
+            services.AddMvc(options =>
+            {
+                options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+
+            });    
+            services.AddRazorPages(options =>
+            {
+                options.Conventions.AuthorizePage("/Basket/Checkout");
+            });
+            services.AddControllersWithViews();
+
+            services.AddHttpContextAccessor();
+            
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1"}));
+
+            services.AddHealthChecks();
+
+            services.Configure<ServiceConfig>(config =>
+            {
+                config.Services = new List<ServiceDescriptor>(services);
+
+                config.Path = "/allservices";
+            });
+
+            _services = services; // used to debug registered services
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -223,7 +227,7 @@ namespace Microsoft.eShopWeb.Web
                 });
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                // app.UseDeveloperExceptionPage();
                 app.UseShowAllServicesMiddleware();
                 app.UseDatabaseErrorPage();
             }
@@ -236,12 +240,6 @@ namespace Microsoft.eShopWeb.Web
 
             app.UseStaticFiles();
             app.UseRouting();
-
-            app.Map("/api", appBuilder =>
-            {
-                appBuilder.UseBenchmarking();
-            });
-
             app.UseHttpsRedirection();
             app.UseCookiePolicy();
             app.UseAuthentication();
