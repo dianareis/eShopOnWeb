@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -129,6 +130,40 @@ namespace Microsoft.eShopWeb.Web.Services
             }
 
             return items;
+        }
+
+        public async Task<CatalogItemViewModel> GetItemById(int id, CancellationToken cancellationToken = default)
+        {
+            try{
+                var item = await _itemRepository.GetByIdAsync(id);
+                if (item == null) {
+                    throw new ModelNotFoundException($"Catalog item not found. id={id}");
+                }
+                var catalogItemViewModel = await CreateCatalogItemViewModel(item, cancellationToken);
+                return catalogItemViewModel;
+            } catch (Exception ex) {
+                throw new ModelNotFoundException($"Catalog item not found. id={id}", ex);
+            }
+        }
+    }
+
+    [Serializable]
+    internal class ModelNotFoundException : Exception
+    {
+        public ModelNotFoundException()
+        {
+        }
+
+        public ModelNotFoundException(string message) : base(message)
+        {
+        }
+
+        public ModelNotFoundException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected ModelNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

@@ -11,5 +11,7 @@ namespace Microsoft.eShopWeb.Web.Services
         Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId, CancellationToken cancellationToken = default(CancellationToken));
         Task<IEnumerable<SelectListItem>> GetBrands(CancellationToken cancellationToken = default(CancellationToken));
         Task<IEnumerable<SelectListItem>> GetTypes(CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<CatalogItemViewModel> GetItemById(int Id, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
