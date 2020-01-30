@@ -25,10 +25,14 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
         {
             return await _dbContext.Set<T>().FindAsync(id);
         }
+        // public virtual async Task<T> GetByNameAsync(string name)
+        // {
+        //     return await _dbContext.Set<T>().FindAsync(name);
+        // }
 
         public async Task<IReadOnlyList<T>> ListAllAsync()
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            return await _dbContext.Set<T>().ToListAsync(); //_dbContext.Set<CatalogTypes>().ToListAsync();
         }
 
         public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)

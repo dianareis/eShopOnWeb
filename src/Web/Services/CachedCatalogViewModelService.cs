@@ -23,20 +23,20 @@ namespace Microsoft.eShopWeb.Web.Services
         public async Task<IEnumerable<SelectListItem>> GetBrands(CancellationToken cancellationToken = default(CancellationToken))
         {
             return await _cache.GetOrCreateAsync(CacheHelpers.GenerateBrandsCacheKey(), async entry =>
-                    {
-                        entry.SlidingExpiration = CacheHelpers.DefaultCacheDuration;
-                        return await _catalogViewModelService.GetBrands(cancellationToken);
-                    });
+                {
+                    entry.SlidingExpiration = CacheHelpers.DefaultCacheDuration;
+                    return await _catalogViewModelService.GetBrands(cancellationToken);
+                });
         }
 
-        public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, string searchText, int? brandId, int? typeId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var cacheKey = CacheHelpers.GenerateCatalogItemCacheKey(pageIndex, Constants.ITEMS_PER_PAGE, brandId, typeId);
 
             return await _cache.GetOrCreateAsync(cacheKey, async entry =>
             {
                 entry.SlidingExpiration = CacheHelpers.DefaultCacheDuration;
-                return await _catalogViewModelService.GetCatalogItems(pageIndex, itemsPage, brandId, typeId, cancellationToken);
+                return await _catalogViewModelService.GetCatalogItems(pageIndex, itemsPage, searchText, brandId, typeId, cancellationToken);
             });
         }
 
