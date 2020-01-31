@@ -184,24 +184,6 @@ namespace Microsoft.eShopWeb.Web.Services
             return items;
         }
 
-        // public async Task<CatalogItemViewModel> GetItemByName(string name, CancellationToken cancellationToken) {
-        //     try
-        //     {
-        //         var item = await _itemRepository.GetByNameAsync(name);
-        //         if (item == null)
-        //         {
-        //             throw new ModelNotFoundException($"Catalog item not found. name={name}");
-        //         }
-        //         bool convertPrice = true;
-        //         var catalogItemViewModel = await CreateCatalogItemViewModel(item, convertPrice, cancellationToken);
-        //         return catalogItemViewModel;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         throw new ModelNotFoundException($"Catalog item not found. name={name}", ex);
-        //     }
-        // }
-
         public async Task<CatalogItemViewModel> GetItemById(int id, bool convertPrice = true, CancellationToken cancellationToken = default)
         {
             try
