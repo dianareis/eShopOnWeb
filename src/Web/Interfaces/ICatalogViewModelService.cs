@@ -16,6 +16,7 @@ namespace Microsoft.eShopWeb.Web.Services
         /// Get item by id
         /// </summary>
         /// <param name="Id">Item identifier</param>
+        /// <param name="convertPrice">Convert Price</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns></returns>
         Task<CatalogItemViewModel> GetItemById(int Id, bool convertPrice = true, CancellationToken cancellationToken = default(CancellationToken));
