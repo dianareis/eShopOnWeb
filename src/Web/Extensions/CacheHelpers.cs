@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Microsoft.eShopWeb.Web.Extensions
 {
@@ -9,6 +10,9 @@ namespace Microsoft.eShopWeb.Web.Extensions
 
         public static string GenerateCatalogItemCacheKey(int pageIndex, int itemsPage, string searchText, int? brandId, int? typeId)
         {
+            if(pageIndex < 0) {
+                throw new InvalidPageIndexException();
+            }
             string _searchText = string.IsNullOrEmpty(searchText)?"":searchText.Replace(" ", ""); // TODO: Handle invalid special chars in cache keys?
             return string.Format(_itemsKeyTemplate, pageIndex, itemsPage, _searchText, brandId, typeId);
         }
@@ -27,5 +31,10 @@ namespace Microsoft.eShopWeb.Web.Extensions
         {
             return $"catalog_item_{id}";
         }
+    }
+
+    public class InvalidPageIndexException : Exception
+    {
+        
     }
 }
