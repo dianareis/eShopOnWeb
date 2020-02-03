@@ -59,22 +59,42 @@ namespace Microsoft.eShopWeb.UnitTests.ApplicationCore.Services.BasketServiceTes
             _mockBasketRepo.Verify(x => x.UpdateAsync(basket), Times.Once());
         }
 
-        [Fact]
-        public async Task RemoveItemWithNullQty()
+        [Theory]
+        [InlineData(4)]
+        public async Task SetQuantityToZero_Removes_Item_From_Basket(int numInitialItemsBasket)
         {
+            var random = new Random();
             var basketId = 10;
             var basket = new Basket();
-            var itemId = 1;
-            basket.AddItem(itemId, 10, 0);
+            var itemPrice = 10;
+
+            // create basket with 4 items (random quantities)
+            foreach (var itemId in Enumerable.Range(1,numInitialItemsBasket)) {
+                var initialQty = random.Next(1, 10);
+                basket.AddItem(itemId, itemPrice, initialQty);
+            }
+            foreach (var item in basket.Items) {
+                item.Id = item.CatalogItemId; // hack to map the itemId above with the CatalogItemId
+            }
+
+            var initialItemsCount = basket.Items.Count;
 
             _mockBasketRepo.Setup(
                 x => x.GetByIdAsync(basketId)).ReturnsAsync(basket);
             var basketService = new BasketService(_mockBasketRepo.Object, null);
 
-            await basketService.SetQuantities(basketId, new System.Collections.Generic.Dictionary<string, int>() {
-                {basketId.ToString(), 0}
-            });
-            Assert.Equal(0, basket.Items.Count);
+            // Removing items
+            var itemIdToRemove = random.Next(1, numInitialItemsBasket);
+            var itemToRemove = basket.Items.Where(item => item.Id == itemIdToRemove).First();
+
+            var quantities = new System.Collections.Generic.Dictionary<string, int>();
+            quantities.Add(itemToRemove.Id.ToString(), 0);
+            var numItemsToRemove = quantities.Count();
+
+            await basketService.SetQuantities(basketId, quantities);
+
+            Assert.True(basket.Items.Count == initialItemsCount - numItemsToRemove);
+            _mockBasketRepo.Verify(x => x.UpdateAsync(basket), Times.Once());
         }
     }
 }
