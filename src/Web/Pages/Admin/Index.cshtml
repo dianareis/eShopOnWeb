@@ -11,6 +11,10 @@
 <section class="esh-catalog-filters">
     <div class="container">
         <form method="get">
+            <label class="esh-catalog-label" data-title="View Type">
+                <select asp-for="@Model.CatalogModel.ResultView"
+                asp-items="@Model.CatalogModel.ResultViews" class="esh-catalog-filter"></select>
+            </label>
             <label class="esh-catalog-label" data-title="brand">
                 <select asp-for="@Model.CatalogModel.BrandFilterApplied" asp-items="@Model.CatalogModel.Brands" class="esh-catalog-filter"></select>
             </label>

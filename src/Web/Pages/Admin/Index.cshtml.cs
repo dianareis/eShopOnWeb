@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.eShopWeb.ApplicationCore.Constants;
 using Microsoft.eShopWeb.Web.Extensions;
 using Microsoft.eShopWeb.Web.Services;
 using Microsoft.eShopWeb.Web.ViewModels;
 using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Microsoft.eShopWeb.Web.Pages.Admin
@@ -30,6 +32,9 @@ namespace Microsoft.eShopWeb.Web.Pages.Admin
             _cache.Remove(cacheKey);
 
             CatalogModel = await _catalogViewModelService.GetCatalogItems(pageId.GetValueOrDefault(), Constants.ITEMS_PER_PAGE, catalogModel.SearchFilter, catalogModel.BrandFilterApplied, catalogModel.TypesFilterApplied, convertPrice: false, HttpContext.RequestAborted);
+            CatalogModel.ResultView = catalogModel.ResultView; // HACK
+            CatalogModel.ResultViews = Enum<ResultView>.GetAll()
+                .Select(resultView => new SelectListItem { Value = resultView.ToString(), Text = resultView.ToString() });
         }
     }
 }

@@ -27,15 +27,5 @@ namespace Microsoft.eShopWeb.Web.Pages
             CatalogModel.ResultViews = Enum<ResultView>.GetAll()
                 .Select(resultView => new SelectListItem { Value = resultView.ToString(), Text = resultView.ToString() });
         }
-
-        // [HttpGet("(vista)")]
-        // public ActionResult Vista(string vista) {
-        //     switch (vista){
-        //         case "Grelha":
-        //             vista = "ResultViews/_gridView";
-        //             break;
-        //     }
-        //     return View(vista);
-        // }
     }
 }
