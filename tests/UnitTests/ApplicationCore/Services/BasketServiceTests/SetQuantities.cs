@@ -60,9 +60,16 @@ namespace Microsoft.eShopWeb.UnitTests.ApplicationCore.Services.BasketServiceTes
         }
 
         [Theory]
-        [InlineData(4)]
-        public async Task SetQuantityToZero_Removes_Item_From_Basket(int numInitialItemsBasket)
+        [InlineData(4, 1)]
+        [InlineData(4, 2)]
+        [InlineData(4, 3)]
+        [InlineData(4, 4)]
+        public async Task SetQuantityToZero_Removes_Item_From_Basket(int numInitialItemsBasket, int numItemsToRemove)
         {
+            if (numInitialItemsBasket < numItemsToRemove) {
+                throw new Exception();
+            }
+
             var random = new Random();
             var basketId = 10;
             var basket = new Basket();
@@ -84,12 +91,14 @@ namespace Microsoft.eShopWeb.UnitTests.ApplicationCore.Services.BasketServiceTes
             var basketService = new BasketService(_mockBasketRepo.Object, null);
 
             // Removing items
-            var itemIdToRemove = random.Next(1, numInitialItemsBasket);
-            var itemToRemove = basket.Items.Where(item => item.Id == itemIdToRemove).First();
+            // var itemIdToRemove = random.Next(1, numInitialItemsBasket);
+            // var itemToRemove = basket.Items.Where(item => item.Id == itemIdToRemove).First();
 
             var quantities = new System.Collections.Generic.Dictionary<string, int>();
-            quantities.Add(itemToRemove.Id.ToString(), 0);
-            var numItemsToRemove = quantities.Count();
+            foreach (var itemToRemove in basket.Items.Take(numItemsToRemove)){
+                quantities.Add(itemToRemove.Id.ToString(), 0);
+            }
+            // var numItemsToRemove = quantities.Count();
 
             await basketService.SetQuantities(basketId, quantities);
 
