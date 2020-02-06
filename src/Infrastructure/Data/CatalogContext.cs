@@ -17,6 +17,7 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
         public DbSet<CatalogItem> CatalogItems { get; set; }
         public DbSet<CatalogBrand> CatalogBrands { get; set; }
         public DbSet<CatalogType> CatalogTypes { get; set; }
+        public DbSet<Store> Store {get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
@@ -24,6 +25,7 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
             /* adiciona propriedade para pré-definir o valor do showpirce para true
             builder.Entity<CatalogItem>()
                 .Property(x => x.ShowPrice)

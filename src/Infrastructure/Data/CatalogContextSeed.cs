@@ -78,22 +78,11 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
             };
         }
 
-        static IEnumerable<Lojas> GetPreconfiguredLojas()
-        {
-            return new List<Lojas>()
-            {
-                new Lojas() { Loja = "Palácio do Gelo Viseu"},
-                new Lojas() { Loja = "Fórum Viseu" },
-                new Lojas() { Loja = "Colombo Lisboa" },
-                new Lojas() { Loja = "NorteShopping Porto" }
-            };
-        }
-
         static IEnumerable<CatalogItem> GetPreconfiguredItems()
         {
             return new List<CatalogItem>()
             {
-                new CatalogItem() { CatalogTypeId=2,CatalogBrandId=2, Description = ".NET Bot Black Sweatshirt", Name = ".NET Bot Black Sweatshirt", Price = 19.5M, PictureUri = "http://catalogbaseurltobereplaced/images/products/1.png", StockLoja=2 },
+                new CatalogItem() { CatalogTypeId=2,CatalogBrandId=2, Description = ".NET Bot Black Sweatshirt", Name = ".NET Bot Black Sweatshirt", Price = 19.5M, PictureUri = "http://catalogbaseurltobereplaced/images/products/1.png" },
                 new CatalogItem() { CatalogTypeId=1,CatalogBrandId=2, Description = ".NET Black & White Mug", Name = ".NET Black & White Mug", Price= 8.50M, PictureUri = "http://catalogbaseurltobereplaced/images/products/2.png" },
                 new CatalogItem() { CatalogTypeId=2,CatalogBrandId=5, Description = "Prism White T-Shirt", Name = "Prism White T-Shirt", Price = 12, PictureUri = "http://catalogbaseurltobereplaced/images/products/3.png", ShowPrice=false },
                 new CatalogItem() { CatalogTypeId=2,CatalogBrandId=2, Description = ".NET Foundation Sweatshirt", Name = ".NET Foundation Sweatshirt", Price = 12, PictureUri = "http://catalogbaseurltobereplaced/images/products/4.png" },
@@ -105,6 +94,25 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
                 new CatalogItem() { CatalogTypeId=3,CatalogBrandId=2, Description = ".NET Foundation Sheet", Name = ".NET Foundation Sheet", Price = 12, PictureUri = "http://catalogbaseurltobereplaced/images/products/10.png" },
                 new CatalogItem() { CatalogTypeId=3,CatalogBrandId=2, Description = "Cup<T> Sheet", Name = "Cup<T> Sheet", Price = 8.5M, PictureUri = "http://catalogbaseurltobereplaced/images/products/11.png" },
                 new CatalogItem() { CatalogTypeId=2,CatalogBrandId=5, Description = "Prism White TShirt", Name = "Prism White TShirt", Price = 12, PictureUri = "http://catalogbaseurltobereplaced/images/products/12.png" }
+            };
+        }
+
+        static IEnumerable<Store> GetPreconfiguredStores()
+        {
+            return new List<Store>()
+            {
+                new Store() { StoreName = "Palácio do Gelo Viseu"},
+                new Store() { StoreName = "Fórum Viseu" },
+                new Store() { StoreName = "Colombo Lisboa" },
+                new Store() { StoreName = "NorteShopping Porto" }
+            };
+        }
+
+        static IEnumerable<StockPerStore> GetPreconfiguredItemsStores()
+        {
+            return new List<StockPerStore>()
+            {
+                new StockPerStore() { ItemId = 1, StoreId = 2, Stock = 10}
             };
         }
     }
