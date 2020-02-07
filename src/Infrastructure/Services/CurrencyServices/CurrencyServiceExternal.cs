@@ -7,6 +7,6 @@ using Microsoft.eShopWeb.ApplicationCore.Interfaces;
     {
         public Task<decimal> Convert(decimal valor, Currency source, Currency target, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(valor);
         }
     }
