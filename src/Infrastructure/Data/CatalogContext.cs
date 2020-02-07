@@ -26,6 +26,19 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<StockPerStore>()
+                .HasKey(t => new { t.ItemId, t.StoreId });
+
+            builder.Entity<StockPerStore>()
+                .HasOne(c => c.CatalogItems)
+                .WithMany(sp => sp.StockPerStore)
+                .HasForeignKey(c => c.ItemId);
+
+            builder.Entity<StockPerStore>()
+                .HasOne(s => s.Stores)
+                .WithMany(sp => sp.StockPerStore)
+                .HasForeignKey(s => s.StoreId);
+
             /* adiciona propriedade para pré-definir o valor do showpirce para true
             builder.Entity<CatalogItem>()
                 .Property(x => x.ShowPrice)

@@ -1,7 +1,9 @@
 
+using Microsoft.eShopWeb.ApplicationCore.Interfaces;
+
 namespace Microsoft.eShopWeb.ApplicationCore.Entities
 {
-    public class StockPerStore
+    public class StockPerStore : IAggregateRoot
     {
         public int ItemId {get; set; }
         public CatalogItem CatalogItems { get; set; }

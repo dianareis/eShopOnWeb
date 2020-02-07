@@ -201,6 +201,20 @@ namespace Microsoft.eShopWeb.Web.Services
                 throw new ModelNotFoundException($"Catalog item not found. id={id}", ex);
             }
         }
+
+        public async Task<IReadOnlyList<StockPerStore>> GetStockByItemId(int id, CancellationToken cancellationToken = default)
+        {
+            var item = await _itemRepository.GetByIdAsync(id);
+            if (item == null)
+            {
+                throw new ModelNotFoundException($"Catalog item not found. id={id}");
+            }
+
+            var query = _catalogContext.CatalogItems as IQueryable<CatalogItem>;
+            var whereExp = new List<Expression<Func<CatalogItem, bool>>>();
+
+            return null;
+        }
     }
 
     [Serializable]

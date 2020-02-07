@@ -1,4 +1,6 @@
-﻿using Microsoft.eShopWeb.ApplicationCore.Interfaces;
+﻿using System.Collections.Generic;
+using Microsoft.eShopWeb.ApplicationCore.Entities;
+using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 
 namespace Microsoft.eShopWeb.Web.ViewModels
 {
@@ -9,6 +11,7 @@ namespace Microsoft.eShopWeb.Web.ViewModels
         public string PictureUri { get; set; }
         public decimal Price { get; set; }
         public bool ShowPrice {get; set; }
+        public List<StockPerStore> StockPerStore { get; set; }
         public Currency PriceUnit {get; set; }
     }
 }
