@@ -41,6 +41,22 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
 
                     await catalogContext.SaveChangesAsync();
                 }
+
+                if (!catalogContext.Store.Any())
+                {
+                    catalogContext.Store.AddRange(
+                        GetPreconfiguredStores());
+
+                    await catalogContext.SaveChangesAsync();
+                }
+
+                if (!catalogContext.StockPerStore.Any())
+                {
+                    catalogContext.StockPerStore.AddRange(
+                        GetPreconfiguredItemsStores());
+
+                    await catalogContext.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {

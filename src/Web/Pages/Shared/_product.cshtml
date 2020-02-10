@@ -1,8 +1,27 @@
 ﻿@model CatalogItemViewModel
 
 <form asp-page="/Basket/Index" method="post">
-    <img class="esh-catalog-thumbnail" src="@Model.PictureUri" />
+    <a data-toggle="modal" data-target="#myModal-@Model.Id"><img class="esh-catalog-thumbnail" src="@Model.PictureUri" /></a>
 
+    <div class="modal" id="myModal-@Model.Id">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="color: white; background-color: black;">
+                    <br>
+                    <h4 class="modal-title">Find in Store</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    @{
+                        <partial name="_stockPerStore" for="StockPerStore" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
     <input class="esh-catalog-button" type="submit" value="[ ADD TO BASKET ]" />
     
     <div class="esh-catalog-name">
@@ -16,6 +35,12 @@
     } else {
         <span>Sob-Consulta</span>
     }
+
+    <ul>
+    @foreach (var entry in Model.StockPerStore) {
+        <li><a href="@entry.StoreId"></a>@entry.StoreId : @entry.Stock units</li>
+    }
+    </ul>
     
     <input type="hidden" asp-for="@Model.Id" name="id" />
     <input type="hidden" asp-for="@Model.Name" name="name" />

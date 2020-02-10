@@ -5,6 +5,7 @@ using Microsoft.eShopWeb.Web.ViewModels;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.eShopWeb.Web.Extensions;
 using System.Threading;
+using Microsoft.eShopWeb.ApplicationCore.Entities;
 
 namespace Microsoft.eShopWeb.Web.Services
 {
@@ -49,10 +50,10 @@ namespace Microsoft.eShopWeb.Web.Services
             });
         }
 
-        // public Task<CatalogItemViewModel> GetItemByName(string name, CancellationToken cancellationToken = default)
-        // {
-        //     throw new System.NotImplementedException();
-        // }
+        public Task<List<StockPerStore>> GetStockById(int IdItem, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
 
         public async Task<IEnumerable<SelectListItem>> GetTypes(CancellationToken cancellationToken = default(CancellationToken))
         {

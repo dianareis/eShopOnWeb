@@ -66,7 +66,8 @@ namespace Microsoft.eShopWeb.Web.Services
                 PictureUri = catalogItem.PictureUri,
                 Price = await (convertPrice ? _currencyService.Convert(catalogItem.Price, DEFAULT_PRICE_UNIT, USER_PRICE_UNIT, cancellationToken) : Task.FromResult(catalogItem.Price)),
                 ShowPrice = catalogItem.ShowPrice,
-                PriceUnit = USER_PRICE_UNIT
+                PriceUnit = USER_PRICE_UNIT,
+                // StockPerStore = await GetStockById(catalogItem.Id)
             };
         }
 
@@ -202,18 +203,18 @@ namespace Microsoft.eShopWeb.Web.Services
             }
         }
 
-        public async Task<IReadOnlyList<StockPerStore>> GetStockByItemId(int id, CancellationToken cancellationToken = default)
+        public async Task<List<StockPerStore>> GetStockById(int IdItem, CancellationToken cancellationToken = default)
         {
-            var item = await _itemRepository.GetByIdAsync(id);
+
+            var item = await _itemRepository.GetByIdAsync(IdItem);
             if (item == null)
             {
-                throw new ModelNotFoundException($"Catalog item not found. id={id}");
+                throw new ModelNotFoundException($"Catalog item not found. id={IdItem}");
             }
 
-            var query = _catalogContext.CatalogItems as IQueryable<CatalogItem>;
-            var whereExp = new List<Expression<Func<CatalogItem, bool>>>();
-
-            return null;
+            var query = _catalogContext.StockPerStore.Where(stockPerStore => stockPerStore.ItemId == IdItem);
+            
+            return await query.ToListAsync();
         }
     }
 

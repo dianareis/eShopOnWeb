@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.eShopWeb.Web.ViewModels;
+using System.Collections.Generic;
+using Microsoft.eShopWeb.ApplicationCore.Entities;
 
 namespace Microsoft.eShopWeb.Web.Controllers.Api
 {
@@ -33,23 +35,17 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
             }
         }
 
-        // [HttpGet("{vista}")]
-        // public ActionResult Vista(CatalogIndexViewModel catalogModel, string vista) {
-        //     switch (vista){
-        //         case "Grid":
-        //             catalogModel.ResultView = ResultView.Grid;
-        //             break;
-        //         case "List":
-        //             catalogModel.ResultView = ResultView.List;
-        //             break;
-        //         case "Table":
-        //             catalogModel.ResultView = ResultView.Table;
-        //             break;
-        //         default:
-        //             catalogModel.ResultView = ResultView.Grid;
-        //             break;
-        //     }
-        //     return Ok(catalogModel.ResultView);
-        // }
+        [HttpGet("{id}")]
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
+        public async Task<ActionResult<List<StockPerStore>>> GetStockListById(int id)
+        {
+            try
+            {
+                List<StockPerStore> stock = await _catalogViewModelService.GetStockById(id);
+                return Ok(stock);
+            } catch (ModelNotFoundException) {
+                return NotFound();
+            }
+        }
     }
 }

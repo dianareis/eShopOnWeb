@@ -37,15 +37,8 @@
     {
         @await Html.PartialAsync("_pagination", Model.CatalogModel.PaginationInfo);
 
-        @* <form method="get">
-            <text>Vista: </text>
-            <input type="submit" class="btn btn-primary" name="vista" value="Grelha" />
-            <input type="submit" class="btn btn-primary" name="vista" value="Lista" />
-            <input type="submit" class="btn btn-primary" name="vista" value="Tabela" />
-        </form> *@
-
         switch (Model.CatalogModel.ResultView) {
-            case ResultView.Grid:    
+            case ResultView.Grid:
                 <partial name="ResultViews/_gridView" for="@Model.CatalogModel.CatalogItems" />        
                 break;
             case ResultView.List: {
