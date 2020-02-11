@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.eShopWeb.Web.Extensions;
@@ -11,6 +10,7 @@ namespace Microsoft.eShopWeb.Web.Pages
 {
     public class IndexModel : PageModel
     {
+
         private readonly ICatalogViewModelService _catalogViewModelService;
 
         public IndexModel(ICatalogViewModelService catalogViewModelService)

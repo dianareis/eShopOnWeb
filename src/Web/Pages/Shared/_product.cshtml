@@ -15,9 +15,14 @@
 
                 <!-- Modal body -->
                 <div class="modal-body">
-                    @{
+                    @* @{
                         <partial name="_stockPerStore" for="StockPerStore" />
-                    }
+                        <ul>
+                            @foreach (var entry in Model.StockPerStore) {
+                                <li><a href="@entry.StoreId"></a>@entry.StoreId : @entry.Stock units</li>
+                            }
+                        </ul>
+                    } *@
                 </div>
             </div>
         </div>
@@ -35,12 +40,6 @@
     } else {
         <span>Sob-Consulta</span>
     }
-
-    <ul>
-    @foreach (var entry in Model.StockPerStore) {
-        <li><a href="@entry.StoreId"></a>@entry.StoreId : @entry.Stock units</li>
-    }
-    </ul>
     
     <input type="hidden" asp-for="@Model.Id" name="id" />
     <input type="hidden" asp-for="@Model.Name" name="name" />

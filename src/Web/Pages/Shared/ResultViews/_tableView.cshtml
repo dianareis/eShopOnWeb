@@ -3,6 +3,7 @@
 <div class="esh-catalog-items">
     <table>
         <thead>
+            <th></th>
             <th>Name</th>
             <th>Price</th>
             <th></th>
@@ -11,6 +12,7 @@
             @foreach (var catalogItem in Model)
             {
                 <tr>
+                    <td><img class="esh-catalog-thumbnail" src="@catalogItem.PictureUri" /></td>
                     <td>@catalogItem.Name</td>
                     <td>
                         <span>@catalogItem.Price</span>
