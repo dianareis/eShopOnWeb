@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.eShopWeb.ApplicationCore.Entities;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 
 namespace Microsoft.eShopWeb.Web.ViewModels

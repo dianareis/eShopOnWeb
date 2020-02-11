@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.eShopWeb.Web.Middleware;
 
-namespace Web.Extensions.Middleware
+namespace Microsoft.eShopWeb.Web.Extensions.Middleware
 {
     public static class BenchmarkingMiddlewareExtensions
     {

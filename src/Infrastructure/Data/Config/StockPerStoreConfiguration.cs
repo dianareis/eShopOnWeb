@@ -10,15 +10,15 @@ namespace Microsoft.eShopWeb.Infrastructure.Data.Config
         {
             builder.ToTable("StockPerStore");
 
-            builder.HasKey(t => new { t.ItemId, t.StoreId });
+            builder.HasKey(StockPerStore => new { StockPerStore.ItemId, StockPerStore.StoreId });
 
-            builder.HasOne(c => c.CatalogItem)
-                .WithMany(sp => sp.StockPerStore)
-                .HasForeignKey(c => c.ItemId);
+            builder.HasOne(StockPerStore => StockPerStore.CatalogItem)
+                .WithMany(CatalogItem => CatalogItem.StockPerStore)
+                .HasForeignKey(StockPerStore => StockPerStore.ItemId);
 
-            builder.HasOne(s => s.Store)
-                .WithMany(sp => sp.StockPerStore)
-                .HasForeignKey(s => s.StoreId);
+            builder.HasOne(StockPerStore => StockPerStore.Store)
+                .WithMany(Store => Store.StockPerStore)
+                .HasForeignKey(StockPerStore => StockPerStore.StoreId);
         }
     }
 }

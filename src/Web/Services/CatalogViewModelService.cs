@@ -66,8 +66,7 @@ namespace Microsoft.eShopWeb.Web.Services
                 PictureUri = catalogItem.PictureUri,
                 Price = await (convertPrice ? _currencyService.Convert(catalogItem.Price, DEFAULT_PRICE_UNIT, USER_PRICE_UNIT, cancellationToken) : Task.FromResult(catalogItem.Price)),
                 ShowPrice = catalogItem.ShowPrice,
-                PriceUnit = USER_PRICE_UNIT,
-                // StockPerStore = await GetStockById(catalogItem.Id)
+                PriceUnit = USER_PRICE_UNIT
             };
         }
 
@@ -83,7 +82,7 @@ namespace Microsoft.eShopWeb.Web.Services
             }
             else if (brandId.HasValue)
             {
-                query = query.Where(x => x.CatalogBrandId == brandId.Value);
+                //query = query.Where(x => x.CatalogBrandId == brandId.Value);
                 whereExp.Add(x => x.CatalogBrandId == brandId.Value);
             }
             else if (typeId.HasValue)
@@ -213,7 +212,7 @@ namespace Microsoft.eShopWeb.Web.Services
             }
 
             var query = _catalogContext.StockPerStore.Where(stockPerStore => stockPerStore.ItemId == IdItem);
-            
+
             return await query.ToListAsync();
         }
     }

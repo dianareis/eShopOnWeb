@@ -35,17 +35,17 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
             }
         }
 
-        [HttpGet("{id}")]
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
-        public async Task<ActionResult<List<StockPerStore>>> GetStockListById(int id)
-        {
-            try
-            {
-                List<StockPerStore> stock = await _catalogViewModelService.GetStockById(id);
-                return Ok(stock);
-            } catch (ModelNotFoundException) {
-                return NotFound();
-            }
-        }
+        // [HttpGet("{id}")]
+        // [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
+        // public async Task<ActionResult<List<StockPerStore>>> GetStockListById(int id)
+        // {
+        //     try
+        //     {
+        //         List<StockPerStore> stock = await _catalogViewModelService.GetStockById(id);
+        //         return Ok(stock);
+        //     } catch (ModelNotFoundException) {
+        //         return NotFound();
+        //     }
+        // }
     }
 }

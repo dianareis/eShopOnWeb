@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Services;
@@ -17,6 +18,7 @@ using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.Infrastructure.Identity;
 using Microsoft.eShopWeb.Infrastructure.Logging;
 using Microsoft.eShopWeb.Infrastructure.Services;
+using Microsoft.eShopWeb.Web.Extensions.Middleware;
 using Microsoft.eShopWeb.Web.Interfaces;
 using Microsoft.eShopWeb.Web.Services;
 using Microsoft.Extensions.Configuration;
@@ -27,10 +29,9 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
-using Web.Extensions.Middleware;
+using static Microsoft.eShopWeb.Web.Middleware.UrlRequestCultureProvider;
 
 [assembly : ApiConventionType(typeof(DefaultApiConventions))]
 namespace Microsoft.eShopWeb.Web
@@ -157,15 +158,7 @@ namespace Microsoft.eShopWeb.Web
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
             services.AddCatalogServices(Configuration);
-            // services.AddScoped<ICatalogViewModelService, CachedCatalogViewModelService>();
-            // services.AddScoped<IBasketService, BasketService>();
-            // services.AddScoped<IBasketViewModelService, BasketViewModelService>();
-            // services.AddScoped<IOrderService, OrderService>();
-            // services.AddScoped<IOrderRepository, OrderRepository>();
-            // services.AddScoped<CatalogViewModelService>();
-            // services.AddScoped<ICatalogItemViewModelService, CatalogItemViewModelService>();
-            // services.Configure<CatalogSettings>(Configuration);
-            // services.AddSingleton<IUriComposer>(new UriComposer(Configuration.Get<CatalogSettings>()));
+            
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -179,14 +172,10 @@ namespace Microsoft.eShopWeb.Web
                 options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
             });
 
-            services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
+            services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
 
-            services.AddMvc(options =>
-            {
-                options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
-
-            })
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = "Resources"; })
+            services.AddMvc()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
                     
             services.AddRazorPages(options =>
@@ -208,22 +197,6 @@ namespace Microsoft.eShopWeb.Web
                 config.Path = "/allservices";
             });
 
-            services.Configure<RequestLocalizationOptions>(
-                opts =>
-                {
-                    var supportedCultures = new List<CultureInfo>
-                    {
-                        new CultureInfo("en"),
-                        new CultureInfo("pt-PT"),
-                    };
-
-                    opts.DefaultRequestCulture = new RequestCulture("en");
-                    // Formatting numbers, dates, etc.
-                    opts.SupportedCultures = supportedCultures;
-                    // UI strings that we have localized.
-                    opts.SupportedUICultures = supportedCultures;
-                });
-
             _services = services; // used to debug registered services
         }
 
@@ -231,6 +204,7 @@ namespace Microsoft.eShopWeb.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseBenchmarking();
+            app.UseRequestCulture();
             app.UseHealthChecks("/health",
                 new HealthCheckOptions
                 {
@@ -263,18 +237,15 @@ namespace Microsoft.eShopWeb.Web
                 app.UseHsts();
             }
 
-            app.UseStaticFiles();
-
-            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
-            
-            app.UseRequestLocalization(options.Value);
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    name: "Default",
+                    template: "{culture}/{controller}/{action}/{id?}",
+                    defaults: new { culture = "en-US", controller = "Home", action = "Index" });
             });
+
+            app.UseStaticFiles();
 
             app.UseRouting();
             app.UseHttpsRedirection();
