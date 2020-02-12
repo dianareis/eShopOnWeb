@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ using Microsoft.eShopWeb.Infrastructure.Identity;
 using Microsoft.eShopWeb.Infrastructure.Logging;
 using Microsoft.eShopWeb.Infrastructure.Services;
 using Microsoft.eShopWeb.Web.Extensions.Middleware;
+using Microsoft.eShopWeb.Web.Middleware;
 using Microsoft.eShopWeb.Web.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,7 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
 
@@ -165,16 +168,23 @@ namespace Microsoft.eShopWeb.Web
                 options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
             });
 
-            services.AddLocalization(options => { options.ResourcesPath = "Pages/Resources"; });
-
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            
             services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
-                    
+                
             services.AddRazorPages(options =>
             {
                 options.Conventions.AuthorizePage("/Basket/Checkout");
+            }).AddRazorPagesOptions(options =>
+            {
+                options.Conventions.Add(new CustomCultureRouteModelConvention());
+                options.Conventions.AuthorizePage("/Basket/Checkout");
             });
+
+            
+
             services.AddControllersWithViews();
 
             services.AddHttpContextAccessor();
@@ -197,7 +207,7 @@ namespace Microsoft.eShopWeb.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseBenchmarking();
-            app.UseRequestCulture();
+            
             app.UseHealthChecks("/health",
                 new HealthCheckOptions
                 {
@@ -234,7 +244,9 @@ namespace Microsoft.eShopWeb.Web
 
             app.UseRouting();
             app.UseHttpsRedirection();
+            app.UseRequestCulture();
             app.UseCookiePolicy();
+            
             app.UseAuthentication();
             app.UseAuthorization();
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -248,9 +260,10 @@ namespace Microsoft.eShopWeb.Web
             });
 
             app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute("default", "{controller:slugify=Home}/{action:slugify=Index}/{id?}");
-                endpoints.MapControllerRoute("culture", "{culture:slugify=en-US}/{controller:slugify=Home}/{action:slugify=Index}/{id?}");
+            { 
+                // endpoints.MapControllerRoute(name: "culture-route", pattern:"{culture=en-US}/{controller=Home}/{action=Index}/{id?}"); 
+                endpoints.MapControllerRoute( name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+               
                 endpoints.MapRazorPages();
                 endpoints.MapHealthChecks("home_page_health_check");
                 endpoints.MapHealthChecks("api_health_check");

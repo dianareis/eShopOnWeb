@@ -10,15 +10,15 @@ namespace Microsoft.eShopWeb.Web.Extensions.Middleware
     {
         public static void UseRequestCulture(this IApplicationBuilder app)
         {
-            var supportedCultures = new List<CultureInfo>
+            var supportedCultures = new[]
             {
                 new CultureInfo("en-US"),
                 new CultureInfo("pt-PT"),
             };
 
-            var options = new RequestLocalizationOptions
+            var options = new RequestLocalizationOptions()
             { 
-                DefaultRequestCulture = new RequestCulture("en-US"),
+                DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US"),
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
 
