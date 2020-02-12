@@ -6,9 +6,10 @@
     ViewData["Title"] = Localizer["Catalog"];
     @model IndexModel
 }
+<p>Current culture: @System.Globalization.CultureInfo.CurrentCulture.DisplayName</p>
+<p>Current UI culture: @System.Globalization.CultureInfo.CurrentUICulture.DisplayName</p>
 
-<h2>@ViewData["MyTitle"]</h2>
-
+<p>@Localizer["test"]</p>
 <section class="esh-catalog-hero">
     <div class="container">
         <img class="esh-catalog-title" src="~/images/main_banner_text.png" />
@@ -65,7 +66,7 @@
     } else
     {
         <div class="esh-catalog-items row">
-            THERE ARE NO RESULTS THAT MATCH YOUR SEARCH
+            @Localizer["THERE ARE NO RESULTS THAT MATCH YOUR SEARCH"]
         </div>
     }
 

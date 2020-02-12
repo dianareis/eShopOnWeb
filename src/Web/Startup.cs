@@ -6,32 +6,25 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
-using Microsoft.eShopWeb.ApplicationCore.Services;
 using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.Infrastructure.Identity;
 using Microsoft.eShopWeb.Infrastructure.Logging;
 using Microsoft.eShopWeb.Infrastructure.Services;
 using Microsoft.eShopWeb.Web.Extensions.Middleware;
-using Microsoft.eShopWeb.Web.Interfaces;
 using Microsoft.eShopWeb.Web.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
-using static Microsoft.eShopWeb.Web.Middleware.UrlRequestCultureProvider;
 
 [assembly : ApiConventionType(typeof(DefaultApiConventions))]
 namespace Microsoft.eShopWeb.Web
@@ -172,7 +165,7 @@ namespace Microsoft.eShopWeb.Web
                 options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
             });
 
-            services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
+            services.AddLocalization(options => { options.ResourcesPath = "Pages/Resources"; });
 
             services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -237,14 +230,6 @@ namespace Microsoft.eShopWeb.Web
                 app.UseHsts();
             }
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "Default",
-                    template: "{culture}/{controller}/{action}/{id?}",
-                    defaults: new { culture = "en-US", controller = "Home", action = "Index" });
-            });
-
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -265,6 +250,7 @@ namespace Microsoft.eShopWeb.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("default", "{controller:slugify=Home}/{action:slugify=Index}/{id?}");
+                endpoints.MapControllerRoute("culture", "{culture:slugify=en-US}/{controller:slugify=Home}/{action:slugify=Index}/{id?}");
                 endpoints.MapRazorPages();
                 endpoints.MapHealthChecks("home_page_health_check");
                 endpoints.MapHealthChecks("api_health_check");

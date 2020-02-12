@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.eShopWeb.Web.Middleware;
+using Microsoft.AspNetCore.Localization.Routing;
 
 namespace Microsoft.eShopWeb.Web.Extensions.Middleware
 {
@@ -23,14 +23,17 @@ namespace Microsoft.eShopWeb.Web.Extensions.Middleware
                 SupportedUICultures = supportedCultures
 
             };
+
+            options.RequestCultureProviders = new List<IRequestCultureProvider>()  
+            {
+                new QueryStringRequestCultureProvider(),
+                new CookieRequestCultureProvider(),
+                new RouteDataRequestCultureProvider() { Options = options } 
+            };
             
-            options.RequestCultureProviders.Insert(0, new UrlRequestCultureProvider {
-                Options = options
-            });
-            
+            options.RequestCultureProviders.Insert(0, new RouteDataRequestCultureProvider());
 
             app.UseRequestLocalization(options);
-
         }
     }
 }

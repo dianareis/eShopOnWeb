@@ -12,6 +12,7 @@ namespace Microsoft.eShopWeb.Web.Middleware
         {
             string cultureCode = null;
 
+            // check if culture segment is on url
             if (httpContext.Request.Path.HasValue && httpContext.Request.Path.Value == "/")
             {
                 cultureCode = this.GetDefaultCultureCode();
