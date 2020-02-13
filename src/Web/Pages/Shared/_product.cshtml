@@ -1,16 +1,11 @@
 ﻿@model CatalogItemViewModel
 
-@{
-    var mid = $"storeAvailabilityModal{Model.Id}";
-    var tm = $"#{mid}";
-    var contentAvailability = $"StoreAvailabilityBody_{Model.Id}";
-    var url = $"/Store/Availability?CatalogItemId={Model.Id}";
-}
-
 <form asp-page="/Basket/Index" method="post">
-    <a data-toggle="modal" data-target="@tm" onclick="showStoreItemAvailability('@url', '@contentAvailability')><img class="esh-catalog-thumbnail" src="@Model.PictureUri" /></a>
+    <a class="btn" data-toggle="modal" data-target="#MyModal_@Model.Id">
+        <img class="esh-catalog-thumbnail" src="@Model.PictureUri" />
+    </a>
 
-    <div class="modal" id="@mid">
+    <div class="modal" id="MyModal_@Model.Id">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- Modal Header -->
@@ -22,8 +17,7 @@
 
                 <!-- Modal body -->
                 <div class="modal-body">
-                    @Model.Id
-                    @* <partial name="_stockPerStore" for="StockPerStore" /> *@
+                    @await Component.InvokeAsync("StockPerStore", new { catalogItemId = @Model.Id })
                 </div>
             </div>
         </div>

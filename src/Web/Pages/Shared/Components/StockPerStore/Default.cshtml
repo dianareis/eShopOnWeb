@@ -1,0 +1,10 @@
+﻿@model IEnumerable<StockPerStoreViewModel>
+
+    @if(Model?.Any() == false) {
+        <text>No stock info</text>
+    }
+    else {
+        @foreach (var entry in Model) {
+            <li>@entry.StoreId : @entry.Stock units</li>
+        }
+    }
