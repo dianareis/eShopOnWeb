@@ -201,20 +201,6 @@ namespace Microsoft.eShopWeb.Web.Services
                 throw new ModelNotFoundException($"Catalog item not found. id={id}", ex);
             }
         }
-
-        public async Task<List<StockPerStore>> GetStockById(int IdItem, CancellationToken cancellationToken = default)
-        {
-
-            var item = await _itemRepository.GetByIdAsync(IdItem);
-            if (item == null)
-            {
-                throw new ModelNotFoundException($"Catalog item not found. id={IdItem}");
-            }
-
-            var query = _catalogContext.StockPerStore.Where(stockPerStore => stockPerStore.ItemId == IdItem);
-
-            return await query.ToListAsync();
-        }
     }
 
     [Serializable]
