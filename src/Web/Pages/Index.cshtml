@@ -1,6 +1,8 @@
 ﻿@page
 @using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer Localizer
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<IndexModel> Localizer
+@inject IHtmlLocalizer<IndexModel> HtmlLocalizer
 
 @{
     ViewData["Title"] = Localizer["Catalog"];
@@ -8,6 +10,8 @@
 }
 <p>Current culture: @System.Globalization.CultureInfo.CurrentCulture.DisplayName</p>
 <p>Current UI culture: @System.Globalization.CultureInfo.CurrentUICulture.DisplayName</p>
+
+<p>Current culture: @System.Globalization.CultureInfo.CurrentCulture.Name</p>
 
 <p>@Localizer["test"]</p>
 <section class="esh-catalog-hero">
@@ -31,7 +35,7 @@
             <label class="esh-catalog-label" data-title="search">
                 <input type="text" asp-for="@Model.CatalogModel.SearchFilter">
             </label>
-            <input class="esh-catalog-send" type="image" src="images/arrow-right.svg" />
+            <input class="esh-catalog-send" type="image" src="~/images/arrow-right.svg" />
         </form>
     </div>
 </section>

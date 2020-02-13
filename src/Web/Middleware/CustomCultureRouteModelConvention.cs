@@ -15,7 +15,7 @@ namespace Microsoft.eShopWeb.Web.Middleware
                 selectorModels.Add(new SelectorModel(){
                     AttributeRouteModel = new AttributeRouteModel
                     {
-                        Template = "/{culture}" + "/" + template
+                        Template = "/{culture}/" + template
                     }
                 });
             }

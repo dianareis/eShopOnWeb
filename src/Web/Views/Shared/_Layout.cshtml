@@ -28,16 +28,23 @@
     <div class="esh-app-wrapper">
         <header class="esh-app-header">
             <div class="container">
+                
                 <article class="row">
                     <section class="col-lg-7 col-md-6 col-xs-12">
                         <a asp-area="" asp-page="/Index">
                             <img src="~/images/brand.png" alt="eShop On Web" />
                         </a>
                     </section>
-                    @Localizer["Hello"]
                     <partial name="_LoginPartial" />
                 </article>
-            </div>
+                <article>
+                    <div style="position:relative; float:right;">
+                        <a><img alt="pt-PT" src="~/images/portugal.png" style="height:25px;"></a>
+                        <a><img alt="en-US" src="~/images/united-states.png" style="height:25px;" /></a>
+                    </div>
+                </article>
+        </div>
+               
         </header>
         @RenderBody()
         <footer class="esh-app-footer footer">
