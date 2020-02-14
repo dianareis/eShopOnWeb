@@ -1,7 +1,28 @@
 ﻿@model CatalogItemViewModel
 
 <form asp-page="/Basket/Index" method="post">
-    <img class="esh-catalog-thumbnail" src="@Model.PictureUri" style="height: 50px; width: auto;" />
+    <a data-toggle="modal" data-target="#MyModal_@Model.Id">
+        <img class="esh-catalog-thumbnail" src="@Model.PictureUri" style="height: 50px; width: auto;" />
+    </a>
+
+    <div class="modal" id="MyModal_@Model.Id">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="color: white; background-color: #00A69C;">
+                    <br>
+                    <h4 class="modal-title">Find in Store</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    @await Component.InvokeAsync("StockPerStore", new { catalogItemId = @Model.Id })
+                </div>
+            </div>
+        </div>
+    </div>
+   
     <span class="esh-catalog-name">
         <span>@Model.Name</span>
     </span>

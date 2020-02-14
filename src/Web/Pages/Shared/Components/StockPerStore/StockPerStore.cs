@@ -15,7 +15,7 @@ namespace Microsoft.eShopWeb.Web.Pages.Shared.Components.StockPerStore
 {
     public class StockPerStore : ViewComponent
     {
-        private readonly ILogger<StockPerStoreViewModelService> _logger;
+        private readonly ILogger<StockPerStore> _logger;
         private readonly IAsyncRepository<CatalogItem> _itemRepository;
         private readonly IAsyncRepository<Store> _storeRepository;
         private readonly CatalogContext _catalogContext;
@@ -25,7 +25,7 @@ namespace Microsoft.eShopWeb.Web.Pages.Shared.Components.StockPerStore
             IAsyncRepository<Store> storeRepository,
             CatalogContext catalogContext)
         {
-            _logger = loggerFactory.CreateLogger<StockPerStoreViewModelService>();
+            _logger = loggerFactory.CreateLogger<StockPerStore>();
             _itemRepository = itemRepository;
             _storeRepository = storeRepository;
             _catalogContext = catalogContext;

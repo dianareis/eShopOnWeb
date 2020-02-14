@@ -12,7 +12,29 @@
             @foreach (var catalogItem in Model)
             {
                 <tr>
-                    <td><img class="esh-catalog-thumbnail" src="@catalogItem.PictureUri" /></td>
+                    <td>
+                        <a data-toggle="modal" data-target="#MyModal_@catalogItem.Id">
+                            <img class="esh-catalog-thumbnail" src="@catalogItem.PictureUri" />
+                        </a>
+                    </td>
+
+                    <div class="modal" id="MyModal_@catalogItem.Id">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Modal Header -->
+                                <div class="modal-header" style="color: white; background-color: #00A69C;">
+                                    <br>
+                                    <h4 class="modal-title">Find in Store</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    @await Component.InvokeAsync("StockPerStore", new { catalogItemId = @catalogItem.Id })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <td>@catalogItem.Name</td>
                     <td>
                         <span>@catalogItem.Price</span>
