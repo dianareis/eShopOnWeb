@@ -27,11 +27,34 @@ namespace Microsoft.eShopWeb.Web.Pages.Admin
             return Task.CompletedTask;
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        [HttpPost]
+        public async Task<IActionResult> OnPostAsync(string submitButton)
+        {
+            if (submitButton == "Save")
+            {
+                return await Edit();
+            }
+            else if (submitButton == "Delete")
+            {
+                return await Delete();
+            }
+            return RedirectToPage("/Admin/Index");
+        }
+
+        public async Task<IActionResult> Edit()
         {
             if (ModelState.IsValid)
             {
                 await _catalogItemViewModelService.UpdateCatalogItem(CatalogModel);
+            }
+
+            return RedirectToPage("/Admin/Index");
+        }
+        public async Task<IActionResult> Delete()
+        {
+            if (ModelState.IsValid)
+            {
+                await _catalogItemViewModelService.DeleteCatalogItem(CatalogModel);
             }
 
             return RedirectToPage("/Admin/Index");

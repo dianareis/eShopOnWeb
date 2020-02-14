@@ -10,7 +10,9 @@
 </section>
 <section class="esh-catalog-filters">
     <div class="container">
+        
         <form method="get">
+            <a href="~/Admin/AddItem" class="btn btn-success">Add Item</a>
             <label class="esh-catalog-label" data-title="View Type">
                 <select asp-for="@Model.CatalogModel.ResultView"
                 asp-items="@Model.CatalogModel.ResultViews" class="esh-catalog-filter"></select>
@@ -25,7 +27,7 @@
                 <input type="text" asp-for="@Model.CatalogModel.SearchFilter">
             </label>
             <input class="esh-catalog-send" type="image" src="images/arrow-right.svg" />
-        </form>
+        </form>       
     </div>
 </section>
 <div class="container">

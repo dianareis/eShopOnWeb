@@ -27,5 +27,12 @@ namespace Microsoft.eShopWeb.Web.Services
 
             await _catalogItemRepository.UpdateAsync(updatedCatalogItem);
         }
+
+        public async Task DeleteCatalogItem(CatalogItemViewModel viewModel)
+        {
+            var existingCatalogItem = await _catalogItemRepository.GetByIdAsync(viewModel.Id);
+
+            await _catalogItemRepository.DeleteAsync(existingCatalogItem);
+        }
     }
 }
