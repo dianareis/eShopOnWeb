@@ -3,6 +3,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Localization.Routing;
+using Microsoft.eShopWeb.Web.Middleware;
 
 namespace Microsoft.eShopWeb.Web.Extensions.Middleware
 {

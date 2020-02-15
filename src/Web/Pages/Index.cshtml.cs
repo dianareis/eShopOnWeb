@@ -1,13 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.eShopWeb.Web.Extensions;
 using Microsoft.eShopWeb.Web.Services;
 using Microsoft.eShopWeb.Web.ViewModels;
-using Microsoft.Extensions.Localization;
 
 namespace Microsoft.eShopWeb.Web.Pages
 {
@@ -16,7 +14,7 @@ namespace Microsoft.eShopWeb.Web.Pages
 
         private readonly ICatalogViewModelService _catalogViewModelService;
 
-        public IndexModel(ICatalogViewModelService catalogViewModelService, IStringLocalizer<IndexModel> stringLocalizer, IHtmlLocalizer<IndexModel> htmlLocalizer)
+        public IndexModel(ICatalogViewModelService catalogViewModelService)
         {
             _catalogViewModelService = catalogViewModelService;
         }

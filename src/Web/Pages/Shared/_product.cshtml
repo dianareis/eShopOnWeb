@@ -1,4 +1,8 @@
-﻿@model CatalogItemViewModel
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@model CatalogItemViewModel
 
 <form asp-page="/Basket/Index" method="post">
     <a data-toggle="modal" data-target="#MyModal_@Model.Id">
@@ -11,7 +15,7 @@
                 <!-- Modal Header -->
                 <div class="modal-header" style="color: white; background-color: #00A69C;">
                     <br>
-                    <h4 class="modal-title">Find in Store</h4>
+                    <h4 class="modal-title">@Localizer["Find in Store"]</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -22,8 +26,8 @@
             </div>
         </div>
     </div>
-    <input class="esh-catalog-button" type="submit" value="[ ADD TO BASKET ]" />
-    
+    @if (@Model.ShowPrice){<input class="esh-catalog-button" type="submit" value=@Localizer["ADD TO BASKET"] />}
+ 
     <div class="esh-catalog-name">
         <span>@Model.Name</span>
     </div>
@@ -33,7 +37,7 @@
             <span class="item-price-unit">@Model.PriceUnit.ToString()</span>
         </div>
     } else {
-        <span>Sob-Consulta</span>
+        <span class="item-price">@Localizer["On Request"]</span>
     }
     
     <input type="hidden" asp-for="@Model.Id" name="id" />

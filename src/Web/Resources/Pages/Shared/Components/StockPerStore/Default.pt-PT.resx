@@ -116,7 +116,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Hello" xml:space="preserve">
-    <value>XXXX</value>
+
+  <data name="No stock info" xml:space="preserve">
+    <value>Sem informação de Stock</value>
   </data>
-</root> 
+  <data name="Store" xml:space="preserve">
+    <value>Loja</value>
+  </data>  
+  <data name="Store" xml:space="preserve">
+    <value>unidades</value>
+  </data>
+</root>

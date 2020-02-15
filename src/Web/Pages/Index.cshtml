@@ -1,36 +1,35 @@
 ﻿@page
 @using Microsoft.AspNetCore.Mvc.Localization
+
 @inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Catalog";
+    ViewData["Title"] = Localizer["title"];
     @model IndexModel
 }
-<p>Current culture: @System.Globalization.CultureInfo.CurrentCulture.DisplayName</p>
-<p>Current UI culture: @System.Globalization.CultureInfo.CurrentUICulture.DisplayName</p>
 
-<p>Current culture: @System.Globalization.CultureInfo.CurrentCulture.Name</p>
-
-<h1>@Localizer["hello"]</h1>
 <section class="esh-catalog-hero">
     <div class="container">
-        <img class="esh-catalog-title" src="~/images/main_banner_text.png" />
+        @if(@System.Globalization.CultureInfo.CurrentCulture.Name == "en-US") {
+            <img class="esh-catalog-title" src="~/images/main_banner_text.png" />
+        }
+       
     </div>
 </section>
 <section class="esh-catalog-filters">
     <div class="container">
         <form method="get">
-            <label class="esh-catalog-label" data-title="View Type">
+            <label class="esh-catalog-label" data-title=@Localizer["viewType"]>
                 <select asp-for="@Model.CatalogModel.ResultView"
                 asp-items="@Model.CatalogModel.ResultViews" class="esh-catalog-filter"></select>
             </label>
-            <label class="esh-catalog-label" data-title="brand">
+            <label class="esh-catalog-label" data-title=@Localizer["brand"]>
                 <select asp-for="@Model.CatalogModel.BrandFilterApplied" asp-items="@Model.CatalogModel.Brands" class="esh-catalog-filter"></select>
             </label>
-            <label class="esh-catalog-label" data-title="type">
+            <label class="esh-catalog-label" data-title=@Localizer["type"]>
                 <select asp-for="@Model.CatalogModel.TypesFilterApplied" asp-items="@Model.CatalogModel.Types" class="esh-catalog-filter"></select>
             </label>
-            <label class="esh-catalog-label" data-title="search">
+            <label class="esh-catalog-label" data-title=@Localizer["search"]>
                 <input type="text" asp-for="@Model.CatalogModel.SearchFilter">
             </label>
             <input class="esh-catalog-send" type="image" src="~/images/arrow-right.svg" />
@@ -68,7 +67,7 @@
     } else
     {
         <div class="esh-catalog-items row">
-            @Localizer["THERE ARE NO RESULTS THAT MATCH YOUR SEARCH"]
+            @Localizer["no results"]
         </div>
     }
 

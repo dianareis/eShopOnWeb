@@ -27,7 +27,6 @@ namespace Microsoft.eShopWeb.Web.Pages.Admin
             return Task.CompletedTask;
         }
 
-        [HttpPost]
         public async Task<IActionResult> OnPostAsync(string submitButton)
         {
             if (submitButton == "Save")

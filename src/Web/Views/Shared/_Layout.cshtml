@@ -1,9 +1,6 @@
 ﻿<!DOCTYPE html>
 
 @inject IViewLocalizer Localizer
-@{
-    var uiCulture = Context.Features.Get<AspNetCore.Localization.IRequestCultureFeature>().RequestCulture.UICulture;
-}
 
 <html>
 <head>
@@ -41,13 +38,13 @@
                             <img src="~/images/brand.png" alt="eShop On Web" />
                         </a>
                     </section>
-                    <h3>@Localizer["Hello"]</h3>
                     <partial name="_LoginPartial" />
                 </article>
                 <article>
                     <div style="position:relative; float:right;">
-                        <a><img alt="pt-PT" src="~/images/portugal.png" style="height:25px;"></a>
-                        <a><img alt="en-US" src="~/images/united-states.png" style="height:25px;" /></a>
+
+                        <a href=""><img alt="pt-PT" src="~/images/portugal.png" style="height:25px;"></a>
+                        <a href=""><img alt="en-US" src="~/images/united-states.png" style="height:25px;" /></a>
                     </div>
                 </article>
         </div>
@@ -59,7 +56,7 @@
                 <article class="row">
                     <section class="col-sm-6"></section>
                     <section class="col-sm-6">
-                        <div class="esh-app-footer-text hidden-xs"> e-ShopOnWeb. All rights reserved </div>
+                        <div class="esh-app-footer-text hidden-xs"> e-ShopOnWeb. @Localizer["footer"] </div>
                     </section>
                 </article>
             </div>

@@ -1,4 +1,6 @@
-﻿@if (Context.User.Identity.IsAuthenticated)
+﻿@inject IViewLocalizer Localizer
+
+@if (Context.User.Identity.IsAuthenticated)
 {
     <section class="col-lg-4 col-md-5 col-xs-12">
         <div class="esh-identity">

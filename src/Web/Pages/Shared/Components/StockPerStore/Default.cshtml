@@ -1,10 +1,14 @@
-﻿@model IEnumerable<StockPerStoreViewModel>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@model IEnumerable<StockPerStoreViewModel>
 
     @if(Model?.Any() == false) {
-        <text>No stock info</text>
+        <text>@Localizer["No stock info"]</text>
     }
     else {
         @foreach (var entry in Model) {
-            <li>Loja @entry.StoreId : @entry.Stock units</li>
+            <p>@Localizer["Store"] @entry.StoreId : @entry.Stock @Localizer["units"]</p>
         }
     }

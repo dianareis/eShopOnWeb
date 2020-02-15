@@ -116,7 +116,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="hello" xml:space="preserve">
-    <value>Ola</value>
+
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+    <data name="Showing {0} of {1} products - Page {2} - {3}" xml:space="preserve">
+    <value>Showing {0} of {1} products - Page {2} - {3}</value>
   </data>
 </root>

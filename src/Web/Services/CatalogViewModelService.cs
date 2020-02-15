@@ -63,7 +63,7 @@ namespace Microsoft.eShopWeb.Web.Services
             {
                 Id = catalogItem.Id,
                 Name = catalogItem.Name,
-                PictureUri = catalogItem.PictureUri,
+                PictureUri = _uriComposer.ComposePicUri(catalogItem.PictureUri),
                 Price = await (convertPrice ? _currencyService.Convert(catalogItem.Price, DEFAULT_PRICE_UNIT, USER_PRICE_UNIT, cancellationToken) : Task.FromResult(catalogItem.Price)),
                 ShowPrice = catalogItem.ShowPrice,
                 PriceUnit = USER_PRICE_UNIT
@@ -119,13 +119,9 @@ namespace Microsoft.eShopWeb.Web.Services
             // var itemsOnPage = await ListCatalogItem(pageItemsOffset, itemsPage, brandId, typeId);
             // var totalItems = await CountCatalogItems(brandId, typeId);
 
-            foreach (var itemOnPage in itemsOnPage)
-            {
-                itemOnPage.PictureUri = _uriComposer.ComposePicUri(itemOnPage.PictureUri);
-            }
-
             var CatalogItemsTask = Task.WhenAll(itemsOnPage.Select(catalogItem => CreateCatalogItemViewModel(catalogItem, convertPrice, cancellationToken)));
             cancellationToken.ThrowIfCancellationRequested();
+
             var vm = new CatalogIndexViewModel()
             {
                 CatalogItems = await CatalogItemsTask,
