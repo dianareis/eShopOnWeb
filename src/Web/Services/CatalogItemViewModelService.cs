@@ -24,6 +24,10 @@ namespace Microsoft.eShopWeb.Web.Services
             var updatedCatalogItem = existingCatalogItem;
             updatedCatalogItem.Name = viewModel.Name;
             updatedCatalogItem.Price = viewModel.Price;
+            updatedCatalogItem.ShowPrice = viewModel.ShowPrice;
+            updatedCatalogItem.CatalogBrandId = viewModel.CatalogBrandId;
+            updatedCatalogItem.CatalogTypeId = viewModel.CatalogTypeId;
+
 
             await _catalogItemRepository.UpdateAsync(updatedCatalogItem);
         }
@@ -33,6 +37,21 @@ namespace Microsoft.eShopWeb.Web.Services
             var existingCatalogItem = await _catalogItemRepository.GetByIdAsync(viewModel.Id);
 
             await _catalogItemRepository.DeleteAsync(existingCatalogItem);
+        }
+
+        public async Task AddCatalogItem(CatalogItemViewModel viewModel)
+        {
+            var newCatalogItem = new CatalogItem();
+
+            newCatalogItem.Id = viewModel.Id;
+            newCatalogItem.Name = viewModel.Name;
+            // newCatalogItem.PictureUri = viewModel.PictureUri;
+            newCatalogItem.Price = viewModel.Price;
+            newCatalogItem.ShowPrice = viewModel.ShowPrice;
+            newCatalogItem.CatalogBrandId = viewModel.CatalogBrandId;
+            newCatalogItem.CatalogTypeId = viewModel.CatalogTypeId;
+
+            await _catalogItemRepository.AddAsync(newCatalogItem);
         }
     }
 }

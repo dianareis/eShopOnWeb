@@ -5,6 +5,7 @@ using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Specifications;
 using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.Web.ViewModels;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace Microsoft.eShopWeb.Web.Services
         private readonly IUriComposer _uriComposer;
         private readonly ICurrencyService _currencyService;
         private readonly CatalogContext _catalogContext;
+        private readonly IConfiguration  _configuration;
 
         private const Currency DEFAULT_PRICE_UNIT = Currency.USD; // TODO: Get from Configuration
         private const Currency USER_PRICE_UNIT = Currency.EUR; // TODO: Get from IUserCurrencyService 
@@ -40,7 +42,8 @@ namespace Microsoft.eShopWeb.Web.Services
             IAsyncRepository<CatalogType> typeRepository,
             IUriComposer uriComposer,
             ICurrencyService currencyService,
-            CatalogContext catalogContext)
+            CatalogContext catalogContext,
+            IConfiguration configuration)
         {
             _logger = loggerFactory.CreateLogger<CatalogViewModelService>();
             _itemRepository = itemRepository;
@@ -49,6 +52,7 @@ namespace Microsoft.eShopWeb.Web.Services
             _uriComposer = uriComposer;
             _currencyService = currencyService;
             _catalogContext = catalogContext;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -63,9 +67,11 @@ namespace Microsoft.eShopWeb.Web.Services
             {
                 Id = catalogItem.Id,
                 Name = catalogItem.Name,
-                PictureUri = _uriComposer.ComposePicUri(catalogItem.PictureUri),
+                PictureUri = catalogItem.PictureUri,
                 Price = await (convertPrice ? _currencyService.Convert(catalogItem.Price, DEFAULT_PRICE_UNIT, USER_PRICE_UNIT, cancellationToken) : Task.FromResult(catalogItem.Price)),
                 ShowPrice = catalogItem.ShowPrice,
+                CatalogBrandId = catalogItem.CatalogBrandId,
+                CatalogTypeId = catalogItem.CatalogTypeId,
                 PriceUnit = USER_PRICE_UNIT
             };
         }
@@ -118,6 +124,12 @@ namespace Microsoft.eShopWeb.Web.Services
 
             // var itemsOnPage = await ListCatalogItem(pageItemsOffset, itemsPage, brandId, typeId);
             // var totalItems = await CountCatalogItems(brandId, typeId);
+
+            foreach (var itemOnPage in itemsOnPage)
+            {
+                itemOnPage.PictureUri = string.IsNullOrEmpty(itemOnPage.PictureUri) ? _configuration.GetValue<string>("ImagePictureUri")
+                : _uriComposer.ComposePicUri(itemOnPage.PictureUri);
+            }
 
             var CatalogItemsTask = Task.WhenAll(itemsOnPage.Select(catalogItem => CreateCatalogItemViewModel(catalogItem, convertPrice, cancellationToken)));
             cancellationToken.ThrowIfCancellationRequested();

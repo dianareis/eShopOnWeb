@@ -1,0 +1,47 @@
+﻿@page
+@{
+    ViewData["Title"] = "Admin - Add Item";
+    @model AddItemModel
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="CatalogModel.Name"></label>
+                    <input asp-for="CatalogModel.Name" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="CatalogModel.Price"></label>
+                    <input asp-for="CatalogModel.Price" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="CatalogModel.ShowPrice"></label>
+                    <input asp-for="CatalogModel.ShowPrice" type="checkbox" class="form-control-checkbox" checked/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CatalogModel.CatalogBrandId">Brand</label>
+                    <select asp-for="CatalogModel.CatalogBrandId" asp-items="@Model.CatalogModel.Brands" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CatalogModel.CatalogTypeId">Type</label>
+                    <select asp-for="CatalogModel.CatalogTypeId" asp-items="@Model.CatalogModel.Types" class="form-control"></select>
+                </div>
+                
+                @* <div class="form-group">
+                    <label asp-for="@Model.CatalogModel.PictureUri" class="form-control">Image</label>
+                    <input type="file" asp-for="@Model.CatalogModel.PictureUri" />
+                </div> *@
+                
+                <div class="col-md-2">
+                    <input type="submit" name="submitButton" value="Save" class="esh-catalog-button" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.eShopWeb.ApplicationCore.Constants;
 using Microsoft.eShopWeb.Web.Interfaces;
+using Microsoft.eShopWeb.Web.Services;
 using Microsoft.eShopWeb.Web.ViewModels;
 using System.Threading.Tasks;
 
@@ -12,19 +13,22 @@ namespace Microsoft.eShopWeb.Web.Pages.Admin
     public class EditCatalogItemModel : PageModel
     {
         private readonly ICatalogItemViewModelService _catalogItemViewModelService;
+        private readonly CatalogViewModelService _catalogViewModelService;
 
-        public EditCatalogItemModel(ICatalogItemViewModelService catalogItemViewModelService)
+        public EditCatalogItemModel(ICatalogItemViewModelService catalogItemViewModelService, CatalogViewModelService catalogViewModelService)
         {
             _catalogItemViewModelService = catalogItemViewModelService;
+            _catalogViewModelService = catalogViewModelService;
         }
 
         [BindProperty]
         public CatalogItemViewModel CatalogModel { get; set; } = new CatalogItemViewModel();
 
-        public Task OnGet(CatalogItemViewModel catalogModel)
+        public async void OnGet(CatalogItemViewModel catalogModel)
         {
             CatalogModel = catalogModel;
-            return Task.CompletedTask;
+            CatalogModel.Brands = await _catalogViewModelService.GetBrands();
+            CatalogModel.Types = await _catalogViewModelService.GetTypes();
         }
 
         public async Task<IActionResult> OnPostAsync(string submitButton)

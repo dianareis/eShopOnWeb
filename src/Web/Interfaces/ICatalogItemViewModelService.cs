@@ -8,5 +8,7 @@ namespace Microsoft.eShopWeb.Web.Interfaces
         Task UpdateCatalogItem(CatalogItemViewModel viewModel);
 
         Task DeleteCatalogItem(CatalogItemViewModel viewModel);
+
+        Task AddCatalogItem(CatalogItemViewModel viewModel);
     }
 }

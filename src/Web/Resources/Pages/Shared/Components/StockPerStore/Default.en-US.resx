@@ -123,7 +123,7 @@
   <data name="Store" xml:space="preserve">
     <value>Store</value>
   </data>  
-  <data name="Store" xml:space="preserve">
+  <data name="units" xml:space="preserve">
     <value>units</value>
   </data>
 </root>
