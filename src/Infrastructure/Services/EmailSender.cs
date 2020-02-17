@@ -13,30 +13,22 @@ namespace Microsoft.eShopWeb.Infrastructure.Services
     // This class is used by the application to send email for account confirmation and password reset.
     // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
     public class EmailSender : IEmailSender
-    {        
+    {
         private readonly IConfiguration _configuration;
         private readonly ISendGridClient _sendGridClient;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<EmailSender> _logger;
 
 
         public EmailSender(IConfiguration configuration,
-            ISendGridClient sendGridClient, IServiceProvider serviceProvider, ILoggerFactory logger){
+            ISendGridClient sendGridClient, ILoggerFactory logger){
             _configuration  = configuration;
             _sendGridClient = sendGridClient;
-            _serviceProvider = serviceProvider;
             _logger = logger.CreateLogger<EmailSender>();
         }
         
         public async Task SendEmailAsync(string email, string subject, string message)
         {
-            var configuration = _serviceProvider.GetRequiredService<IConfiguration>();
-            var apiKey = configuration.GetValue<string>("SendGrid:apiKey");
-            var client = new SendGridClient(apiKey);
-
-            if(string.IsNullOrEmpty(apiKey)){
-                throw new Exception("SendGrid apiKey is null or empty");
-            }
+            var apiKey = _configuration.GetValue<string>("SendGrid:apiKey");
 
             var from = new EmailAddress(_configuration.GetValue<string>("SendGrid:from"));
 
@@ -44,15 +36,16 @@ namespace Microsoft.eShopWeb.Infrastructure.Services
             var plainTextContent = string.Empty;
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, message);
 
-            var response = await _sendGridClient.SendEmailAsync(msg);
+            var client = new SendGridClient(apiKey);
+            var response = await client.SendEmailAsync(msg);
 
             if(response.StatusCode == HttpStatusCode.Accepted){
-                  _logger.LogInformation($"Send e-mail to {email} is confirmed.");
+                  _logger.LogInformation($"E-mail sended to {email}");
             }
 
             else
             {
-                _logger.LogError($"Send e-mail to {email} is not confirmed. {response.ToString()}");
+                _logger.LogError($"ERROR Sending email to {email} {response.ToString()}");
                 throw new Exception(response.ToString());
             }
         }

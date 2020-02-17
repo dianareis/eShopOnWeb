@@ -10,17 +10,19 @@
     <div class="container">
         <section class="esh-orders-detail-section">
             <article class="esh-orders-detail-titles row">
-                <section class="esh-orders-detail-title col-xs-3">Order number</section>
+                <section class="esh-orders-detail-title col-xs-2">Order number</section>
                 <section class="esh-orders-detail-title col-xs-3">Date</section>
                 <section class="esh-orders-detail-title col-xs-2">Total</section>
-                <section class="esh-orders-detail-title col-xs-3">Status</section>
+                <section class="esh-orders-detail-title col-xs-2">Status</section>
+                <section class="esh-orders-detail-title col-xs-3">Notes</section>
             </article>
 
             <article class="esh-orders-detail-items row">
-                <section class="esh-orders-detail-item col-xs-3">@Model.OrderNumber</section>
+                <section class="esh-orders-detail-item col-xs-2">@Model.OrderNumber</section>
                 <section class="esh-orders-detail-item col-xs-3">@Model.OrderDate</section>
                 <section class="esh-orders-detail-item col-xs-2">$@Model.Total.ToString("N2")</section>
-                <section class="esh-orders-detail-item col-xs-3">@Model.Status</section>
+                <section class="esh-orders-detail-item col-xs-2">@Model.Status</section>
+                <section class="esh-orders-detail-item col-xs-3">@Model.Notes</section>
             </article>
         </section>
 

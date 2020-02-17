@@ -15,6 +15,7 @@ namespace Microsoft.eShopWeb.Web.Pages.Basket
     public class CheckoutModel : PageModel
     {
         private readonly IBasketService _basketService;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IOrderService _orderService;
         private readonly IEmailSender _emailSender;
@@ -23,10 +24,12 @@ namespace Microsoft.eShopWeb.Web.Pages.Basket
 
         public CheckoutModel(IBasketService basketService,
             IBasketViewModelService basketViewModelService,
+            UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOrderService orderService, IEmailSender emailSender)
         {
             _basketService = basketService;
+            _userManager = userManager;
             _signInManager = signInManager;
             _orderService = orderService;
             _basketViewModelService = basketViewModelService;
@@ -46,6 +49,10 @@ namespace Microsoft.eShopWeb.Web.Pages.Basket
             await _basketService.SetQuantities(BasketModel.Id, items);
 
             await _orderService.CreateOrderAsync(BasketModel.Id, new Address("123 Main St.", "Kent", "OH", "United States", "44240"), OrderStatus.Pending, "Awaiting Validation" );
+
+            var user = await _userManager.GetUserAsync(User);
+
+            await _emailSender.SendEmailAsync(user.Email, "eShopWeb - new Order" , "Your order has been registered");
 
             await _basketService.DeleteBasketAsync(BasketModel.Id);
 

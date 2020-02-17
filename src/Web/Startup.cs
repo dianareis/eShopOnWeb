@@ -163,6 +163,21 @@ namespace Microsoft.eShopWeb.Web
 
             services.AddTransient<IEmailSender, EmailSender>();
 
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddJsonFile("emailsettings.json");
+            configurationBuilder.AddConfiguration(Configuration);
+            configurationBuilder.AddEnvironmentVariables();
+            var configuration = configurationBuilder.Build();
+            services.AddSingleton<IConfiguration>(configuration);
+
+            services.AddTransient<ISendGridClient>(provider => {
+                var configuration = provider.GetRequiredService<IConfiguration>();
+                var apiKey = configuration.GetValue<string>("SendGrid:ApiKey");
+                var client = new SendGridClient(apiKey);
+                return client;
+            });
+
+
             // Add memory cache services
             services.AddMemoryCache();
 
