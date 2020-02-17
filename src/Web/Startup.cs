@@ -23,6 +23,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
+using SendGrid;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -159,6 +160,7 @@ namespace Microsoft.eShopWeb.Web
             services.AddCatalogServices(Configuration);
             
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+
             services.AddTransient<IEmailSender, EmailSender>();
 
             // Add memory cache services

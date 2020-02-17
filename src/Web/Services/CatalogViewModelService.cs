@@ -127,8 +127,10 @@ namespace Microsoft.eShopWeb.Web.Services
 
             foreach (var itemOnPage in itemsOnPage)
             {
-                itemOnPage.PictureUri = string.IsNullOrEmpty(itemOnPage.PictureUri) ? _configuration.GetValue<string>("ImagePictureUri")
-                : _uriComposer.ComposePicUri(itemOnPage.PictureUri);
+                if(!string.IsNullOrEmpty(itemOnPage.PictureUri))
+                {
+                    itemOnPage.PictureUri = _uriComposer.ComposePicUri(itemOnPage.PictureUri);
+                }
             }
 
             var CatalogItemsTask = Task.WhenAll(itemsOnPage.Select(catalogItem => CreateCatalogItemViewModel(catalogItem, convertPrice, cancellationToken)));

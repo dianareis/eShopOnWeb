@@ -17,18 +17,20 @@ namespace Microsoft.eShopWeb.Web.Pages.Basket
         private readonly IBasketService _basketService;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IOrderService _orderService;
+        private readonly IEmailSender _emailSender;
         private string _username = null;
         private readonly IBasketViewModelService _basketViewModelService;
 
         public CheckoutModel(IBasketService basketService,
             IBasketViewModelService basketViewModelService,
             SignInManager<ApplicationUser> signInManager,
-            IOrderService orderService)
+            IOrderService orderService, IEmailSender emailSender)
         {
             _basketService = basketService;
             _signInManager = signInManager;
             _orderService = orderService;
             _basketViewModelService = basketViewModelService;
+            _emailSender = emailSender;
         }
 
         public BasketViewModel BasketModel { get; set; } = new BasketViewModel();
