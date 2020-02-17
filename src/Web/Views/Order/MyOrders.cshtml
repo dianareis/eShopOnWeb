@@ -11,6 +11,7 @@
             <section class="esh-orders-title col-xs-4">Date</section>
             <section class="esh-orders-title col-xs-2">Total</section>
             <section class="esh-orders-title col-xs-2">Status</section>
+            <section class="esh-orders-title col-xs-2">Notes</section>
             <section class="esh-orders-title col-xs-2"></section>
         </article>
         @if (Model != null && Model.Any())
@@ -22,12 +23,13 @@
                     <section class="esh-orders-item col-xs-4">@Html.DisplayFor(modelItem => item.OrderDate)</section>
                     <section class="esh-orders-item col-xs-2">$ @Html.DisplayFor(modelItem => item.Total)</section>
                     <section class="esh-orders-item col-xs-2">@Html.DisplayFor(modelItem => item.Status)</section>
+                    <section class="esh-orders-item col-xs-2">@Html.DisplayFor(modelItem => item.Notes)</section>
                     <section class="esh-orders-item col-xs-1">
                         <a class="esh-orders-link" asp-controller="Order" asp-action="Detail" asp-route-orderId="@item.OrderNumber">Detail</a>
                     </section>
                     <section class="esh-orders-item col-xs-1">
-                        @if (item.Status.ToLower() == "submitted")
-                    {
+                        @if (item.Status.ToString().ToLower() != "closed")
+                        {
                             <a class="esh-orders-link" asp-controller="Order" asp-action="cancel" asp-route-orderId="@item.OrderNumber">Cancel</a>
                         }
                     </section>
