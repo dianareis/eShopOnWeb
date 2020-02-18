@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.eShopWeb.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.eShopWeb.ApplicationCore.Constants;
 
 namespace Microsoft.eShopWeb.Web.Controllers.Api
 {
+    [Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS)]
     public class CatalogController : BaseApiController
     {
         private readonly ICatalogViewModelService _catalogViewModelService;

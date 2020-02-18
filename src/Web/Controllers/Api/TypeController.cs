@@ -5,9 +5,12 @@ using Microsoft.eShopWeb.Web.ViewModels;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.eShopWeb.ApplicationCore.Constants;
 
 namespace Microsoft.eShopWeb.Web.Controllers.Api
 {
+    [Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS)]
     public class TypeController : BaseApiController
     {
         private readonly IAsyncRepository<CatalogType> _typeRepository;
@@ -18,6 +21,7 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
         }
 
         [HttpGet]
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
         public async Task<ActionResult<CatalogType>> ListCatalogType()
         {
             var types = await _typeRepository.ListAllAsync();
@@ -27,7 +31,7 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
 
         [HttpGet("{id}")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
-        public async Task<ActionResult<CatalogItemViewModel>> GetTypeById(int id)
+        public async Task<ActionResult<CatalogType>> GetTypeById(int id)
         {
             try
             {
@@ -39,26 +43,39 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
         }
 
         [HttpPost("{id}")]
-        public async Task UpdateCatalogType(int id, string newType)
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
+        public async Task<ActionResult<CatalogType>> UpdateCatalogType(int id, string newType)
         {
+            var types = _typeRepository.ListAllAsync();
             //Get existing CatalogType
-            var existingCatalogType = await _typeRepository.GetByIdAsync(id);
-
-            //Build updated CatalogItem
-            var updatedCatalogType = existingCatalogType;
-            updatedCatalogType.Type = newType;
-            await _typeRepository.UpdateAsync(updatedCatalogType);
+            try {
+                var existingCatalogType = await _typeRepository.GetByIdAsync(id);
+                //Build updated CatalogItem
+                var updatedCatalogType = existingCatalogType;
+                updatedCatalogType.Type = newType;
+                await _typeRepository.UpdateAsync(updatedCatalogType);
+                return Ok();
+            } catch (ModelNotFoundException) {
+                return NotFound();
+            }
         }
 
-        [HttpPost("{id}")]
-        public async Task DeleteCatalogType(int id)
+        [HttpDelete("{id}")]
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Delete))]
+        public async Task<ActionResult<CatalogType>> DeleteCatalogType(int id)
         {
-            var existingCatalogType = await _typeRepository.GetByIdAsync(id);
+            try {
+                var existingCatalogType = await _typeRepository.GetByIdAsync(id);
 
-            await _typeRepository.DeleteAsync(existingCatalogType);
+                await _typeRepository.DeleteAsync(existingCatalogType);
+                return Ok();
+            } catch (ModelNotFoundException) {
+                return NotFound();
+            }
         }
 
         [HttpPost]
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
         public async Task<ActionResult<CatalogType>> AddCatalogType(string type)
         {
             var newCatalogType = new CatalogType();
