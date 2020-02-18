@@ -161,6 +161,12 @@ namespace Microsoft.eShopWeb.Web
             
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
+
             services.AddTransient<IEmailSender, EmailSender>();
 
             var configurationBuilder = new ConfigurationBuilder();
@@ -204,7 +210,6 @@ namespace Microsoft.eShopWeb.Web
                     options.Conventions.AuthorizePage("/Basket/Checkout");
                     options.Conventions.AuthorizePage("/Basket/Checkout");
                 });
-
 
             services.AddControllersWithViews();
 
