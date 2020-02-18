@@ -1,6 +1,5 @@
 ﻿using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SendGrid;
 using SendGrid.Helpers.Mail;

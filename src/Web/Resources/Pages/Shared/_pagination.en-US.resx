@@ -120,6 +120,9 @@
   <data name="Previous" xml:space="preserve">
     <value>Previous</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
     <data name="Showing {0} of {1} products - Page {2} - {3}" xml:space="preserve">
     <value>Showing {0} of {1} products - Page {2} - {3}</value>
   </data>

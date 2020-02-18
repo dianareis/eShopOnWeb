@@ -1,7 +1,6 @@
 ﻿using Microsoft.eShopWeb.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.eShopWeb.Web.ViewModels;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
 using System.Linq;
