@@ -200,6 +200,7 @@ namespace Microsoft.eShopWeb.Web.Services
 
         public async Task<CatalogItemViewModel> GetItemById(int id, bool convertPrice = true, CancellationToken cancellationToken = default)
         {
+            _logger.LogInformation("GetItemById called.");
             try
             {
                 var item = await _itemRepository.GetByIdAsync(id);

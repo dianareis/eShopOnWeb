@@ -27,6 +27,8 @@ namespace Microsoft.eShopWeb.Infrastructure.Services
         
         public async Task SendEmailAsync(string email, string subject, string message)
         {
+            _logger.LogInformation("SendEmail called.");
+            
             var apiKey = _configuration.GetValue<string>("SendGrid:apiKey");
 
             var from = new EmailAddress(_configuration.GetValue<string>("SendGrid:from"));

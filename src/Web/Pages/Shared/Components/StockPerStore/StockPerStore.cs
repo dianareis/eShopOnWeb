@@ -36,10 +36,12 @@ namespace Microsoft.eShopWeb.Web.Pages.Shared.Components.StockPerStore
         }
 
         public async Task<List<StockPerStoreViewModel>> GetStockPerStore(int catalogItemId) {
+            _logger.LogInformation("GetStockPerStore called.");
 
             var item = await _itemRepository.GetByIdAsync(catalogItemId);
             if (item == null)
             {
+                _logger.LogError($"ERROR Catalog Item not found. id={catalogItemId}");
                 throw new ModelNotFoundException($"Catalog item not found. id={catalogItemId}");
             }
 

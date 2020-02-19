@@ -4,6 +4,7 @@ using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Specifications;
 using Microsoft.eShopWeb.Web.Interfaces;
 using Microsoft.eShopWeb.Web.Pages.Basket;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,14 +16,17 @@ namespace Microsoft.eShopWeb.Web.Services
         private readonly IAsyncRepository<Basket> _basketRepository;
         private readonly IUriComposer _uriComposer;
         private readonly IAsyncRepository<CatalogItem> _itemRepository;
+        private readonly ILogger<BasketViewModelService> _logger;
 
         public BasketViewModelService(IAsyncRepository<Basket> basketRepository,
             IAsyncRepository<CatalogItem> itemRepository,
-            IUriComposer uriComposer)
+            IUriComposer uriComposer,
+            ILoggerFactory loggerFactory)
         {
             _basketRepository = basketRepository;
             _uriComposer = uriComposer;
             _itemRepository = itemRepository;
+            _logger = loggerFactory.CreateLogger<BasketViewModelService>();
         }
 
         public async Task<BasketViewModel> GetOrCreateBasketForUser(string userName)
@@ -32,6 +36,7 @@ namespace Microsoft.eShopWeb.Web.Services
 
             if (basket == null)
             {
+                _logger.LogError($"ERROR Basket not found. {basket}");
                 return await CreateBasketForUser(userName);
             }
             return await CreateViewModelFromBasket(basket);
@@ -48,6 +53,7 @@ namespace Microsoft.eShopWeb.Web.Services
 
         private async Task<BasketViewModel> CreateBasketForUser(string userId)
         {
+             _logger.LogInformation("CreateBasketForUser called.");
             var basket = new Basket() { BuyerId = userId };
             await _basketRepository.AddAsync(basket);
 
@@ -61,6 +67,7 @@ namespace Microsoft.eShopWeb.Web.Services
 
         private async Task<List<BasketItemViewModel>> GetBasketItems(IReadOnlyCollection<BasketItem> basketItems)
         {
+             _logger.LogInformation("GetBAsketItems called.");
             var items = new List<BasketItemViewModel>();
             foreach (var item in basketItems)
             {
