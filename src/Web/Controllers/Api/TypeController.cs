@@ -9,7 +9,6 @@ using Microsoft.eShopWeb.ApplicationCore.Constants;
 
 namespace Microsoft.eShopWeb.Web.Controllers.Api
 {
-    [Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS)]
     public class TypeController : BaseApiController
     {
         private readonly IAsyncRepository<CatalogType> _typeRepository;
@@ -41,6 +40,7 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
             }
         }
 
+        [Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS)]
         [HttpPost("{id}")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
         public async Task<ActionResult<CatalogType>> UpdateCatalogType(int id, string newType)
@@ -59,6 +59,7 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
             }
         }
 
+        [Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS)]
         [HttpDelete("{id}")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Delete))]
         public async Task<ActionResult<CatalogType>> DeleteCatalogType(int id)
@@ -73,6 +74,7 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
             }
         }
 
+        [Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS)]
         [HttpPost]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
         public async Task<ActionResult<CatalogType>> AddCatalogType(string type)
