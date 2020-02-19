@@ -5,8 +5,7 @@ namespace Microsoft.eShopWeb.ApplicationCore.Interfaces
 {
     public enum Currency {
         USD,
-        EUR,
-        GBP
+        EUR
     }
 
     /// <summary>

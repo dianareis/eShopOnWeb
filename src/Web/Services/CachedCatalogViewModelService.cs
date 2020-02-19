@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.eShopWeb.Web.Extensions;
 using System.Threading;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
+using System.Globalization;
 
 namespace Microsoft.eShopWeb.Web.Services
 {
@@ -32,7 +33,7 @@ namespace Microsoft.eShopWeb.Web.Services
 
         public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, string searchText, int? brandId, int? typeId, bool convertPrice = true, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var cacheKey = CacheHelpers.GenerateCatalogItemCacheKey(pageIndex, Constants.ITEMS_PER_PAGE, searchText, brandId, typeId);
+            var cacheKey = CacheHelpers.GenerateCatalogItemCacheKey(pageIndex, Constants.ITEMS_PER_PAGE, searchText, brandId, typeId, CultureInfo.CurrentCulture.Name);
 
             return await _cache.GetOrCreateAsync(cacheKey, async entry =>
             {

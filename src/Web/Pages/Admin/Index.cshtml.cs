@@ -6,6 +6,7 @@ using Microsoft.eShopWeb.Web.Extensions;
 using Microsoft.eShopWeb.Web.Services;
 using Microsoft.eShopWeb.Web.ViewModels;
 using Microsoft.Extensions.Caching.Memory;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,9 +26,9 @@ namespace Microsoft.eShopWeb.Web.Pages.Admin
 
         public CatalogIndexViewModel CatalogModel { get; set; } = new CatalogIndexViewModel();
 
-        public async Task OnGet(CatalogIndexViewModel catalogModel, int? pageId)
+        public async Task OnGet(CatalogIndexViewModel catalogModel, int? pageId, bool convertPrice = true)
         {
-            var cacheKey = CacheHelpers.GenerateCatalogItemCacheKey(pageId.GetValueOrDefault(), Constants.ITEMS_PER_PAGE, catalogModel.SearchFilter, catalogModel.BrandFilterApplied, catalogModel.TypesFilterApplied);
+            var cacheKey = CacheHelpers.GenerateCatalogItemCacheKey(pageId.GetValueOrDefault(), Constants.ITEMS_PER_PAGE, catalogModel.SearchFilter, catalogModel.BrandFilterApplied, catalogModel.TypesFilterApplied, CultureInfo.CurrentCulture.Name);
 
             _cache.Remove(cacheKey);
 
