@@ -15,8 +15,6 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
         {
             return _dbContext.Orders
                 .Include(o => o.OrderItems)
-                .Include(o => o.Status)
-                .Include(o => o.Notes)
                 .Include($"{nameof(Order.OrderItems)}.{nameof(OrderItem.ItemOrdered)}")
                 .FirstOrDefaultAsync(x => x.Id == id);
         }

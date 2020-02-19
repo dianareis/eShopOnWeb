@@ -261,3 +261,4 @@ pub/
 
 appsettings.Azure.json
 emailsettings.json
+google_client_secret.json

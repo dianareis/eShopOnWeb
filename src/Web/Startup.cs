@@ -161,12 +161,6 @@ namespace Microsoft.eShopWeb.Web
             
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 
-            services.AddAuthentication().AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
-                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            });
-
             services.AddTransient<IEmailSender, EmailSender>();
 
             var configurationBuilder = new ConfigurationBuilder();
@@ -182,7 +176,6 @@ namespace Microsoft.eShopWeb.Web
                 var client = new SendGridClient(apiKey);
                 return client;
             });
-
 
             // Add memory cache services
             services.AddMemoryCache();
