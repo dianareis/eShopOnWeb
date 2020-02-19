@@ -19,6 +19,7 @@
 <section class="esh-catalog-filters">
     <div class="container">
         <form method="get">
+            <a href="reports/pdf/catalog" target="_blank"><i style="color: red; font-size: 35px;" class="fa fa-file-pdf"></i></a>
             <label class="esh-catalog-label" data-title=@Localizer["viewType"]>
                 <select asp-for="@Model.CatalogModel.ResultView"
                 asp-items="@Model.CatalogModel.ResultViews" class="esh-catalog-filter"></select>
