@@ -39,7 +39,7 @@ namespace Microsoft.eShopWeb.Infrastructure.Services
             var response = await client.SendEmailAsync(msg);
 
             if(response.StatusCode == HttpStatusCode.Accepted){
-                  _logger.LogInformation($"E-mail sended to {email}");
+                _logger.LogInformation($"E-mail sended to {email}");
             }
 
             else
