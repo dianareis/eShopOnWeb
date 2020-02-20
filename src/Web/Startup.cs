@@ -205,6 +205,16 @@ namespace Microsoft.eShopWeb.Web
                     options.Conventions.AuthorizePage("/Basket/Checkout");
                     options.Conventions.AuthorizePage("/Basket/Checkout");
                 });
+            
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection =
+                        Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                });
 
             services.AddControllersWithViews();
 
