@@ -10,7 +10,13 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
 
         public string ComposePicUri(string uriTemplate)
         {
-            return uriTemplate.Replace("http://catalogbaseurltobereplaced", _catalogSettings.CatalogBaseUrl);
+            if(string.IsNullOrEmpty(uriTemplate))
+            {
+                return uriTemplate;
+            } else {
+                return uriTemplate.Replace("http://catalogbaseurltobereplaced", _catalogSettings.CatalogBaseUrl);
+            }
+            
         }
     }
 }

@@ -79,10 +79,7 @@ namespace Microsoft.eShopWeb.Web.Services
                 };
                 var catalogItem = await _itemRepository.GetByIdAsync(item.CatalogItemId);
                 
-                if(!string.IsNullOrEmpty(catalogItem.PictureUri))
-                {
-                    itemModel.PictureUrl = _uriComposer.ComposePicUri(catalogItem.PictureUri);
-                }
+                itemModel.PictureUrl = _uriComposer.ComposePicUri(catalogItem.PictureUri);
                 itemModel.ProductName = catalogItem.Name;
                 items.Add(itemModel);
             }

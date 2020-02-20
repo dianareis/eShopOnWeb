@@ -27,12 +27,12 @@
                     <section class="esh-orders-item col-xs-1">
                         <a class="esh-orders-link" asp-controller="Order" asp-action="Detail" asp-route-orderId="@item.OrderNumber">Detail</a>
                     </section>
-                    <section class="esh-orders-item col-xs-1">
+                    @* <section class="esh-orders-item col-xs-1">
                         @if (item.Status.ToString().ToLower() != "closed")
                         {
                             <a class="esh-orders-link" asp-controller="Order" asp-action="cancel" asp-route-orderId="@item.OrderNumber">Cancel</a>
                         }
-                    </section>
+                    </section> *@
                 </article>
             }
         }
