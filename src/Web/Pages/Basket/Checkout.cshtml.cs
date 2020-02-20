@@ -52,7 +52,10 @@ namespace Microsoft.eShopWeb.Web.Pages.Basket
 
             var user = await _userManager.GetUserAsync(User);
 
-            await _emailSender.SendEmailAsync(user.Email, "eShopWeb - new Order" , "Your order has been registered.");
+            if (!user.UserName.Contains("microsoft.com"))
+            {
+                await _emailSender.SendEmailAsync(user.Email, "eShopWeb - new Order", "Your order has been registered.");
+            }
 
             await _basketService.DeleteBasketAsync(BasketModel.Id);
 

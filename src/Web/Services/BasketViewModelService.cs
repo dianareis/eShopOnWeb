@@ -17,18 +17,15 @@ namespace Microsoft.eShopWeb.Web.Services
         private readonly IAsyncRepository<Basket> _basketRepository;
         private readonly IUriComposer _uriComposer;
         private readonly IAsyncRepository<CatalogItem> _itemRepository;
-        private readonly ILogger<BasketViewModelService> _logger;
 
         public BasketViewModelService(ILoggerFactory loggerFactory, IAsyncRepository<Basket> basketRepository,
             IAsyncRepository<CatalogItem> itemRepository,
-            IUriComposer uriComposer,
-            ILoggerFactory loggerFactory)
+            IUriComposer uriComposer)
         {
             _logger = loggerFactory.CreateLogger<BasketViewModelService>();
             _basketRepository = basketRepository;
             _uriComposer = uriComposer;
             _itemRepository = itemRepository;
-            _logger = loggerFactory.CreateLogger<BasketViewModelService>();
         }
 
         public async Task<BasketViewModel> GetOrCreateBasketForUser(string userName)
@@ -38,7 +35,7 @@ namespace Microsoft.eShopWeb.Web.Services
 
             if (basket == null)
             {
-                _logger.LogError($"ERROR Basket not found. {basket}");
+                _logger.LogError($"Basket not found. {basket}");
                 return await CreateBasketForUser(userName);
             }
             return await CreateViewModelFromBasket(basket);

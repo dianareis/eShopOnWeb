@@ -1,4 +1,5 @@
-﻿using Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
 using System;
 using System.Collections.Generic;
 
@@ -6,6 +7,7 @@ namespace Microsoft.eShopWeb.Web.ViewModels
 {
     public class OrderViewModel
     {
+        public string BuyerId { get; set;  }
         public int OrderNumber { get; set; }
         public DateTimeOffset OrderDate { get; set; }
         public decimal Total { get; set; }
