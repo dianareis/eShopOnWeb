@@ -17,15 +17,18 @@ namespace Microsoft.eShopWeb.Web.Services
         private readonly IAsyncRepository<Basket> _basketRepository;
         private readonly IUriComposer _uriComposer;
         private readonly IAsyncRepository<CatalogItem> _itemRepository;
+        private readonly ILogger<BasketViewModelService> _logger;
 
         public BasketViewModelService(ILoggerFactory loggerFactory, IAsyncRepository<Basket> basketRepository,
             IAsyncRepository<CatalogItem> itemRepository,
-            IUriComposer uriComposer)
+            IUriComposer uriComposer,
+            ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<BasketViewModelService>();
             _basketRepository = basketRepository;
             _uriComposer = uriComposer;
             _itemRepository = itemRepository;
+            _logger = loggerFactory.CreateLogger<BasketViewModelService>();
         }
 
         public async Task<BasketViewModel> GetOrCreateBasketForUser(string userName)
@@ -35,7 +38,7 @@ namespace Microsoft.eShopWeb.Web.Services
 
             if (basket == null)
             {
-                _logger.LogError($"Basket not found.");
+                _logger.LogError($"ERROR Basket not found. {basket}");
                 return await CreateBasketForUser(userName);
             }
             return await CreateViewModelFromBasket(basket);
@@ -66,8 +69,7 @@ namespace Microsoft.eShopWeb.Web.Services
 
         private async Task<List<BasketItemViewModel>> GetBasketItems(IReadOnlyCollection<BasketItem> basketItems)
         {
-             _logger.LogInformation("GetBasketItems called.");
-
+             _logger.LogInformation("GetBAsketItems called.");
             var items = new List<BasketItemViewModel>();
             foreach (var item in basketItems)
             {
@@ -79,7 +81,11 @@ namespace Microsoft.eShopWeb.Web.Services
                     CatalogItemId = item.CatalogItemId
                 };
                 var catalogItem = await _itemRepository.GetByIdAsync(item.CatalogItemId);
-                itemModel.PictureUrl = _uriComposer.ComposePicUri(catalogItem.PictureUri);
+                
+                if(!string.IsNullOrEmpty(catalogItem.PictureUri))
+                {
+                    itemModel.PictureUrl = _uriComposer.ComposePicUri(catalogItem.PictureUri);
+                }
                 itemModel.ProductName = catalogItem.Name;
                 items.Add(itemModel);
             }

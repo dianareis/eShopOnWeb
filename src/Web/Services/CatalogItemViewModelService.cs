@@ -10,23 +10,22 @@ namespace Microsoft.eShopWeb.Web.Services
     public class CatalogItemViewModelService : ICatalogItemViewModelService
     {
         private readonly IAsyncRepository<CatalogItem> _catalogItemRepository;
-        private readonly ILogger<CatalogItemViewModel> _logger;
+        private readonly ILogger<CatalogItemViewModelService> _logger;
 
-        public CatalogItemViewModelService(IAsyncRepository<CatalogItem> catalogItemRepository, ILoggerFactory logger)
+        public CatalogItemViewModelService(IAsyncRepository<CatalogItem> catalogItemRepository, ILoggerFactory loggerFactory)
         {
             _catalogItemRepository = catalogItemRepository;
-            _logger = logger.CreateLogger<CatalogItemViewModelService>();
+            _logger = loggerFactory.CreateLogger<CatalogItemViewModelService>();
         }
 
         public async Task UpdateCatalogItem(CatalogItemViewModel viewModel)
         {
             _logger.LogInformation("UpdateCatalogItem called.");
-
             //Get existing CatalogItem
             var existingCatalogItem = await _catalogItemRepository.GetByIdAsync(viewModel.Id);
             if (existingCatalogItem == null)
             {
-                _logger.LogError($"Catalog item not found. id={viewModel.Id}");
+                _logger.LogError($"ERROR Catalog Item not found. id={viewModel.Id}");
                 throw new ModelNotFoundException($"Catalog item not found. id={viewModel.Id}");
             }
 
@@ -45,11 +44,10 @@ namespace Microsoft.eShopWeb.Web.Services
         public async Task DeleteCatalogItem(CatalogItemViewModel viewModel)
         {
             _logger.LogInformation("DeleteCatalogItem called.");
-
             var existingCatalogItem = await _catalogItemRepository.GetByIdAsync(viewModel.Id);
             if (existingCatalogItem == null)
             {
-                _logger.LogInformation($"Catalog item not found. id={viewModel.Id}");
+                _logger.LogError($"ERROR Catalog Item not found. id={viewModel.Id}");
                 throw new ModelNotFoundException($"Catalog item not found. id={viewModel.Id}");
             }
 
@@ -60,7 +58,7 @@ namespace Microsoft.eShopWeb.Web.Services
         public async Task AddCatalogItem(CatalogItemViewModel viewModel)
         {
             _logger.LogInformation("AddCatalogItem called.");
-
+            
             var newCatalogItem = new CatalogItem();
 
             newCatalogItem.Id = viewModel.Id;

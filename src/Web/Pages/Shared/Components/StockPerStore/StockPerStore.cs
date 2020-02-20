@@ -41,7 +41,7 @@ namespace Microsoft.eShopWeb.Web.Pages.Shared.Components.StockPerStore
             var item = await _itemRepository.GetByIdAsync(catalogItemId);
             if (item == null)
             {
-                _logger.LogError($"Catalog item not found. id={catalogItemId}");
+                _logger.LogError($"ERROR Catalog Item not found. id={catalogItemId}");
                 throw new ModelNotFoundException($"Catalog item not found. id={catalogItemId}");
             }
 
