@@ -210,7 +210,7 @@ namespace Microsoft.eShopWeb.Web
                 .AddGoogle(options =>
                 {
                     IConfigurationSection googleAuthNSection =
-                        Configuration.GetSection("Authentication:Google");
+                        configuration.GetSection("Authentication:Google");
 
                     options.ClientId = googleAuthNSection["ClientId"];
                     options.ClientSecret = googleAuthNSection["ClientSecret"];

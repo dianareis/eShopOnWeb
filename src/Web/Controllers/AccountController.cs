@@ -4,12 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.Infrastructure.Identity;
-using Microsoft.eShopWeb.Web.Services;
-using Microsoft.eShopWeb.Web.ViewModels.Manage;
 using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using static Microsoft.eShopWeb.Web.Areas.Identity.Pages.Account.ExternalLoginModel;
@@ -56,26 +53,29 @@ namespace Microsoft.eShopWeb.Web.Controllers
                 throw new ApplicationException("Error");
             }
 
-            // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-            if (result.Succeeded)
-            {
-                _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                // If the user does not have an account, then ask the user to create an account.
-                // ViewData["ReturnUrl"] = returnUrl;
-                ViewData["LoginProvider"] = info.LoginProvider;
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
 
-                // Clear the existing external cookie to ensure a clean login process
-                await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var providerUser = _userManager.Users.Where(x => x.Email == email && x.ProviderName == info.ProviderDisplayName).ToList().FirstOrDefault();
 
-                StatusMessage = "The external login was added.";
+            if(providerUser == null){
+                // redirecting to a new user's page
+                 return LocalRedirect("/Identity/Account/ExternalLogin");
+                // return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
+            } else  {
+                // Sign in the user with this external login provider if the user already has a login.
+                var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
 
-                return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
+
+                    // Clear the existing external cookie to ensure a clean login process
+                    await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+                    StatusMessage = "The external login was added.";
+                    return RedirectToAction(nameof(Index));
+                }
+                 return LocalRedirect("/Identity/Account/ExternalLogin");
             }
 
         }

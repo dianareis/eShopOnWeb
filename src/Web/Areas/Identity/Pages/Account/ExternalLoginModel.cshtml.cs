@@ -38,12 +38,33 @@ namespace Microsoft.eShopWeb.Web.Areas.Identity.Pages.Account
         {
             [Required]
             [EmailAddress]
+            [Display(Name = "Email")]
             public string Email { get; set; }
+
+            [Required]
+            [Display(Name = "Name")]
+            public string Name { get; set; }
+
+            [Required]
+            [Display(Name = "Provider Name")]
+            public string ProviderName { get; set; }
+
         }
+
+        public async Task OnGetAsync()
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            ExternalLoginView = new ExternalLoginViewModel(){
+                Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                Name = info.Principal.Identity.Name,
+                ProviderName = info.ProviderDisplayName
+            };
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> OnPost(ExternalLoginViewModel model, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {

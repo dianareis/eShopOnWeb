@@ -21,6 +21,7 @@ namespace Microsoft.eShopWeb.Web.Areas.Identity.Pages.Account
 
         public LoginModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
         {
+            _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
         }
@@ -99,15 +100,14 @@ namespace Microsoft.eShopWeb.Web.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> OnPostExternalLoginAsync(string provider, string returnUrl = null)
+
+
+        public async Task<IActionResult> OnPostExternalLoginAsync(string provider)
         {
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             
             // Request a redirect to the external login provider
-            var redirectUrl = Url.ActionLink("LinkLoginCallback", "Account", new { returnUrl });
+            var redirectUrl = Url.ActionLink("LinkLoginCallback", "Account");
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
             return new ChallengeResult(provider, properties);
         }

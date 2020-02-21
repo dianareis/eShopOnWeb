@@ -17,12 +17,17 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+        <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ExternalLoginView.Email"></label>
-                <input asp-for="ExternalLoginView.Email" class="form-control" />
-                <span asp-validation-for="ExternalLoginView.Email" class="text-danger"></span>
+                <label asp-for="@Model.ExternalLoginView.Email"></label>
+                <input asp-for="@Model.ExternalLoginView.Email" class="form-control" />
+                <span asp-validation-for="@Model.ExternalLoginView.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ExternalLoginView.Name"></label>
+                <input asp-for="@Model.ExternalLoginView.Name" class="form-control" />
+                <span asp-validation-for="@Model.ExternalLoginView.Name" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-default">Register</button>
         </form>
