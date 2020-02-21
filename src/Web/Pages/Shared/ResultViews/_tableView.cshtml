@@ -40,10 +40,14 @@
                         </div>
                     </div>
                     <td>@catalogItem.Name</td>
-                    <td>
-                        <span>@catalogItem.Price</span>
-                        <span>@catalogItem.PriceUnit</span>
-                    </td>
+                    @if (@catalogItem.ShowPrice) {
+                        <td>
+                            <span>@catalogItem.Price.ToString("N2")</span>
+                            <span>@catalogItem.PriceUnit..ToString()</span>
+                        </td>
+                    } else {
+                        <span class="item-price">@Localizer["On Request"]</span>
+                    }
                     <td>
                         <form asp-page="/Basket/Index" method="post">
                             <input class="esh-catalog-button" style="width: auto" type="submit" value=@Localizer["ADD TO BASKET"] />

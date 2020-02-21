@@ -123,6 +123,9 @@
   <data name="Price" xml:space="preserve">
     <value>Price</value>
   </data>
+  <data name="On Request" xml:space="preserve">
+    <value>On Request</value>
+  </data>
   <data name="Find in Store" xml:space="preserve">
     <value>Find in Store</value>
   </data>

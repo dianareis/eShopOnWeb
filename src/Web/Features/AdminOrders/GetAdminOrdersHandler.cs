@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.eShopWeb.Web.Features.AllOrders
+namespace Microsoft.eShopWeb.Web.Features.AdminOrders
 {
     public class GetAdminOrdersHandler : IRequestHandler<GetAdminOrders, IEnumerable<OrderViewModel>>
     {

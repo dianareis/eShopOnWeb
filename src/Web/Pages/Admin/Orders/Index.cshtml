@@ -24,7 +24,7 @@
                         <section class="esh-orders-item col-xs-3">@item.OrderDate</section>
                         <section class="esh-orders-item col-xs-1">@item.Total</section>
                         <section class="esh-orders-item col-xs-2">
-                            <select asp-for="@item.Status" asp-items="@Model.OrderStatusList" class="form-control"></select>
+                            <select asp-for="@item.Status" asp-items="@Model.OrderStatusList" name="status" value="@item.Status" class="form-control"></select>
                         </section>
                         <section class="esh-orders-item col-xs-3">
                             <textarea type="text" name="notes" value="@item.Notes">@item.Notes</textarea>

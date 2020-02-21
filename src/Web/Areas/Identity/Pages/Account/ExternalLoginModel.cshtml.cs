@@ -61,9 +61,6 @@ namespace Microsoft.eShopWeb.Web.Areas.Identity.Pages.Account
             };
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPost(ExternalLoginViewModel model, string returnUrl = null)
         {
             if (ModelState.IsValid)
