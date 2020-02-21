@@ -76,7 +76,8 @@ namespace Microsoft.eShopWeb.Web.Services
                 ShowPrice = catalogItem.ShowPrice,
                 CatalogBrandId = catalogItem.CatalogBrandId,
                 CatalogTypeId = catalogItem.CatalogTypeId,
-                PriceUnit = userPriceUnit
+                PriceUnit = userPriceUnit,
+               // Stocks = catalogItem.StockPerStore
             };
         }
 

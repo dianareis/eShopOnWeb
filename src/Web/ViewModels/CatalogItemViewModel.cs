@@ -18,5 +18,7 @@ namespace Microsoft.eShopWeb.Web.ViewModels
 
         public IEnumerable<SelectListItem> Brands {get; set; }
         public IEnumerable<SelectListItem> Types {get; set; }
+        
+        public IEnumerable<StockPerStoreViewModel> Stocks {get; set; }
     }
 }

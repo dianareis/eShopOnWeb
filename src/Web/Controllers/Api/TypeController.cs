@@ -43,17 +43,16 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
         [Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS)]
         [HttpPost("{id}")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
-        public async Task<ActionResult<CatalogType>> UpdateCatalogType(int id, string newType)
+        public async Task<ActionResult<CatalogType>> UpdateCatalogType(int id, [FromBody] string newType)
         {
             var types = _typeRepository.ListAllAsync();
             //Get existing CatalogType
             try {
                 var existingCatalogType = await _typeRepository.GetByIdAsync(id);
                 //Build updated CatalogItem
-                var updatedCatalogType = existingCatalogType;
-                updatedCatalogType.Type = newType;
-                await _typeRepository.UpdateAsync(updatedCatalogType);
-                return Ok();
+                 existingCatalogType.Type = newType;
+                await _typeRepository.UpdateAsync(existingCatalogType);
+                return Ok(existingCatalogType);
             } catch (ModelNotFoundException) {
                 return NotFound();
             }
@@ -81,10 +80,6 @@ namespace Microsoft.eShopWeb.Web.Controllers.Api
         {
             var newCatalogType = new CatalogType();
 
-            var catalogTypes = await _typeRepository.ListAllAsync();
-            var lastId = catalogTypes.OrderBy(x => x.Id).LastOrDefault();
-
-            newCatalogType.Id = lastId.Id + 1;
             newCatalogType.Type = type;
 
             await _typeRepository.AddAsync(newCatalogType);
